@@ -737,9 +737,9 @@ body { background: #f0f4f8; font-family: 'Hiragino Sans','Yu Gothic',sans-serif;
 #rep.pdfmode .jrow { padding-top: 3px !important; padding-bottom: 3px !important; }
 
 #rep.pdfmode { font-size:17px; }
-#rep.pdfmode #rep-p2 .cc { max-width: 520px !important; margin: 0 auto; }
+#rep.pdfmode #rep-p2 .cc { max-width: 680px !important; margin: 0 auto; }
 #rep.pdfmode .ctog { display: none; }
-#rep.pdfmode .cc canvas { max-height: 300px !important; }
+#rep.pdfmode .cc canvas { max-height: 440px !important; }
 #rep.pdfmode .vt { font-size:24px; }
 #rep.pdfmode .vls { font-size:13px; }
 #rep.pdfmode .vd { font-size:14.5px; }
@@ -942,6 +942,9 @@ body { background: #f0f4f8; font-family: 'Hiragino Sans','Yu Gothic',sans-serif;
         </span>
       </div>
       <button type="button" class="btn-start" onclick="p1StartCheck()">健診を開始する</button>
+      <div style="text-align:center;margin-top:14px;">
+        <a href="javascript:void(0)" onclick="openStaffPanel()" style="font-size:13px;color:#7a9ab8;text-decoration:underline;">スタッフ用：集団分析・CSV書き出し・PDF再発行を開く</a>
+      </div>
     </div>
   </div>
 
@@ -970,7 +973,7 @@ body { background: #f0f4f8; font-family: 'Hiragino Sans','Yu Gothic',sans-serif;
   <!-- P1 SARC-F（患者回答・1問ずつ） -->
   <div class="screen" id="p1-sarc">
     <div class="q-wrap" style="flex:none;">
-      <div class="q-category"><span>🧬</span><span>サルコペニア チェック（SARC-F）</span><span class="q-number" id="sarc-prog">1 / 5</span></div>
+      <div class="q-category"><span>🧬</span><span>サルコペニア（加齢による筋力低下）のチェック</span><span class="q-number" id="sarc-prog">1 / 5</span></div>
       <div id="sarc-panel" style="padding:14px 20px 8px;"></div>
     </div>
     <div class="nav-row" style="padding:12px 20px;background:white;border-top:1px solid #e5eef5;display:flex;gap:10px;">
@@ -1057,7 +1060,7 @@ body { background: #f0f4f8; font-family: 'Hiragino Sans','Yu Gothic',sans-serif;
     <div class="section-title">測定 2 / 9　筋肉量（簡易）</div>
     <div class="meas-card">
       <div class="meas-header"><span class="meas-icon">🦵</span><div><div class="meas-title">下腿周径（ふくらはぎ周囲長）</div><div class="meas-sub" id="calf-sub">左右最大部位をメジャーで計測</div></div></div>
-      <div class="guide-box"><span class="guide-illust">📐</span><div class="guide-text"><div class="guide-title">測定のポイント</div>椅子座位で膝90°屈曲。ふくらはぎの最も太い部分をメジャーで計測。左右両側を測定し大きい値を採用。<br><span id="calf-guide-std" style="color:#1a5fa8;font-weight:600;">基準：男性 34cm未満 / 女性 33cm未満 でサルコペニアリスク</span></div></div>
+      <div class="guide-box"><span class="guide-illust">📐</span><div class="guide-text"><div class="guide-title">測定のポイント</div>椅子座位で膝90°屈曲。ふくらはぎの最も太い部分をメジャーで計測。左右両側を測定し大きい値を採用。<br><span id="calf-guide-std" style="color:#1a5fa8;font-weight:600;">基準：男性 34cm未満 / 女性 33cm未満 でサルコペニア（加齢による筋力低下）のリスク</span></div></div>
       <div class="input-area">
         <div class="input-row">
           <div class="input-group"><span class="input-label">右脚 (cm)</span>
@@ -1357,14 +1360,14 @@ body { background: #f0f4f8; font-family: 'Hiragino Sans','Yu Gothic',sans-serif;
   </div>
   <div id="mm-card9" onclick="this.style.display='none'" style="display:none;position:fixed;inset:0;background:#fff;z-index:999;align-items:center;justify-content:center;flex-direction:column;gap:30px;">
     <div style="font-size:64px;font-weight:900;color:#111;letter-spacing:.08em;">目を閉じてください</div>
-    <div style="font-size:14px;color:#9ab;">（画面のどこかをタップで戻る）</div>
+    <div style="position:absolute;left:0;right:0;bottom:28px;text-align:center;font-size:14px;color:#9ab;">（画面のどこかをタップで戻る）</div>
   </div>
   <div id="mm-card11" onclick="this.style.display='none'" style="display:none;position:fixed;inset:0;background:#fff;z-index:999;align-items:center;justify-content:center;flex-direction:column;gap:30px;">
     <svg width="480" height="300" viewBox="0 0 480 300" fill="none" stroke="#111" stroke-width="3">
       <polygon points="150,60 255,135 215,255 85,255 45,135"/>
       <polygon points="330,45 435,120 395,240 265,240 225,120"/>
     </svg>
-    <div style="font-size:14px;color:#9ab;">（画面のどこかをタップで戻る）</div>
+    <div style="position:absolute;left:0;right:0;bottom:28px;text-align:center;font-size:14px;color:#9ab;">（画面のどこかをタップで戻る）</div>
   </div>
 <div class="screen" id="p2-summary">
     <div class="summary-card">
@@ -1431,7 +1434,7 @@ body { background: #f0f4f8; font-family: 'Hiragino Sans','Yu Gothic',sans-serif;
         </div>
         <div class="jrow" id="jrow"></div>
         <div id="sarc-band" style="display:none;border:1.5px solid #d0e0f0;border-radius:10px;overflow:hidden;margin-top:6px;">
-          <div style="background:#eef3fa;padding:8px 14px;font-size:14.5px;font-weight:700;color:#1a3a5c;">🧬 サルコペニア評価（SARC-CalF）</div>
+          <div style="background:#eef3fa;padding:8px 14px;font-size:14.5px;font-weight:700;color:#1a3a5c;">🧬 サルコペニア（加齢による筋力低下）の評価</div>
           <div style="padding:12px 14px;" id="sarc-band-body"></div>
         </div>
         <div id="swallow-band" style="border:1.5px solid #d0e0f0;border-radius:10px;overflow:hidden;margin-top:6px;">
@@ -1456,7 +1459,7 @@ body { background: #f0f4f8; font-family: 'Hiragino Sans','Yu Gothic',sans-serif;
           <span style="color:#9a7a5a;font-size:12px;margin-left:6px;" id="cmp-label"></span>
         </div>
         <div class="charts" style="justify-content:center;">
-          <div class="cc" style="flex:none;width:100%;max-width:460px;border-right:none;">
+          <div class="cc" style="flex:none;width:100%;max-width:640px;border-right:none;">
             <div class="cc-t">身体機能チャート（5軸）</div>
             <div class="cc-s">測定値より算出。外側に広いほど良好です</div>
             <canvas id="chart-phys"></canvas>
@@ -1481,81 +1484,9 @@ body { background: #f0f4f8; font-family: 'Hiragino Sans','Yu Gothic',sans-serif;
 
     <!-- KPIタブ -->
     <div id="t-kpi" style="display:none;">
+      <div id="kpi-body"></div>
       <div class="kc">
-        <div class="kt">📊 受診状況</div>
-        <div class="kg" style="grid-template-columns:repeat(3,1fr);margin-bottom:10px;">
-          <div class="ki"><div class="ki-l">累計受診者数</div><div class="ki-v">52<span class="ki-u">名</span></div><div class="ki-n">男性18名 / 女性34名</div></div>
-          <div class="ki"><div class="ki-l">平均年齢</div><div class="ki-v">74.2<span class="ki-u">歳</span></div><div class="ki-n">範囲：58〜89歳</div></div>
-          <div class="ki"><div class="ki-l">集計期間</div><div class="ki-v" style="font-size:17px;">6ヶ月</div><div class="ki-n">2025.10〜2026.4</div></div>
-        </div>
-        <div style="font-size:14.5px;font-weight:700;color:#1a3a5c;margin-bottom:8px;">フレイル判定割合（初回健診時）</div>
-        <div style="display:flex;gap:8px;margin-bottom:12px;">
-          <div style="flex:1;background:#fff0f0;border-radius:10px;padding:10px 12px;border-left:4px solid #e03030;text-align:center;">
-            <div style="font-size:12px;color:#e03030;font-weight:700;margin-bottom:3px;">🚩 フレイル</div>
-            <div style="font-size:29px;font-weight:800;color:#e03030;">20<span style="font-size:14.5px;">名</span></div>
-            <div style="font-size:14.5px;color:#e03030;font-weight:600;">38%</div>
-          </div>
-          <div style="flex:1;background:#fff8f0;border-radius:10px;padding:10px 12px;border-left:4px solid #e08030;text-align:center;">
-            <div style="font-size:12px;color:#e08030;font-weight:700;margin-bottom:3px;">⚠️ プレフレイル</div>
-            <div style="font-size:29px;font-weight:800;color:#e08030;">23<span style="font-size:14.5px;">名</span></div>
-            <div style="font-size:14.5px;color:#e08030;font-weight:600;">44%</div>
-          </div>
-          <div style="flex:1;background:#f0fff4;border-radius:10px;padding:10px 12px;border-left:4px solid #1a8a50;text-align:center;">
-            <div style="font-size:12px;color:#1a8a50;font-weight:700;margin-bottom:3px;">✓ 健常</div>
-            <div style="font-size:29px;font-weight:800;color:#1a8a50;">9<span style="font-size:14.5px;">名</span></div>
-            <div style="font-size:14.5px;color:#1a8a50;font-weight:600;">18%</div>
-          </div>
-        </div>
-        <div style="font-size:14.5px;font-weight:700;color:#1a3a5c;margin-bottom:6px;">弱点項目ランキング（基準値未満の該当率）</div>
-        <div class="kbw"><div class="kbl"><span>嚥下機能リスク</span><span style="font-weight:700;color:#e03030;">68%</span></div><div class="kbb"><div class="kbf" style="width:68%;background:#e03030;"></div></div></div>
-        <div class="kbw"><div class="kbl"><span>移動・バランス機能リスク</span><span style="font-weight:700;color:#e08030;">58%</span></div><div class="kbb"><div class="kbf" style="width:58%;background:#e08030;"></div></div></div>
-        <div class="kbw"><div class="kbl"><span>外出・交流機能低下率</span><span style="font-weight:700;color:#e08030;">49%</span></div><div class="kbb"><div class="kbf" style="width:49%;background:#e08030;"></div></div></div>
-        <div class="kbw"><div class="kbl"><span>サルコペニア疑い率（SARC-CalF≧11）</span><span style="font-weight:700;color:#e08030;">46%</span></div><div class="kbb"><div class="kbf" style="width:46%;background:#e08030;"></div></div></div>
-        <div class="kbw"><div class="kbl"><span>筋力低下率</span><span style="font-weight:700;color:#1a5fa8;">42%</span></div><div class="kbb"><div class="kbf" style="width:42%;background:#1a3a6a;"></div></div></div>
-        <div class="kbw"><div class="kbl"><span>低栄養リスク率</span><span style="font-weight:700;color:#1a5fa8;">38%</span></div><div class="kbb"><div class="kbf" style="width:38%;background:#1a3a6a;"></div></div></div>
-        <div class="kbw"><div class="kbl"><span>気力・こころ低下率</span><span style="font-weight:700;color:#1a5fa8;">35%</span></div><div class="kbb"><div class="kbf" style="width:35%;background:#1a3a6a;"></div></div></div>
-        <div style="font-size:12px;color:#9abacc;margin-top:4px;">※デモデータ。実データ蓄積後に更新されます。</div>
-      </div>
-      <div class="kc">
-        <div class="kt">🏆 プログラム参加・介入成果</div>
-        <div style="font-size:12px;color:#7a9ab8;margin-bottom:10px;">※フレイル改善率：フレイルまたはプレフレイル判定だった方が1段階以上改善した割合</div>
-        <div style="display:flex;gap:10px;margin-bottom:8px;">
-          <div style="flex:1;background:#f5f8ff;border-radius:10px;padding:12px 14px;border:1.5px solid #d0e0f0;">
-            <div style="font-size:14.5px;font-weight:700;color:#1a3a6a;margin-bottom:6px;padding-bottom:5px;border-bottom:1px solid #e0e8f0;">フレイル予防教室（3ヶ月）</div>
-            <div style="font-size:13px;color:#5a7a9a;margin-bottom:1px;">参加者数</div>
-            <div style="font-size:24px;font-weight:800;color:#1a3a6a;margin-bottom:2px;">19<span style="font-size:13px;color:#9abacc;"> 名</span><span style="font-size:14.5px;color:#7a9ab8;font-weight:600;margin-left:6px;">（37%）</span></div>
-            <div style="font-size:12px;color:#9abacc;margin-bottom:6px;">累計受診者52名中</div>
-            <div style="font-size:13px;color:#5a7a9a;margin-bottom:1px;">フレイル改善率</div>
-            <div style="display:flex;gap:3px;margin-bottom:8px;flex-wrap:wrap;">
-              <span style="background:#d0f0da;color:#1a8a50;padding:4px 10px;border-radius:6px;font-size:15.5px;font-weight:700;">改善 55%</span>
-              <span style="background:#d0e4ff;color:#1a5fa8;padding:4px 10px;border-radius:6px;font-size:15.5px;font-weight:700;">維持 36%</span>
-              <span style="background:#ffe0d8;color:#e03030;padding:4px 10px;border-radius:6px;font-size:15.5px;font-weight:700;">悪化 9%</span>
-            </div>
-            <div style="font-size:13px;color:#5a7a9a;margin-bottom:2px;">継続率（80%以上出席）</div>
-            <div style="font-size:26.5px;font-weight:800;margin-bottom:8px;display:flex;align-items:center;gap:8px;">
-              <span style="color:#1a8a50;">88<span style="font-size:14.5px;">%</span></span>
-              <span style="background:#d0f0da;color:#1a8a50;font-size:12px;font-weight:700;padding:2px 8px;border-radius:4px;">✓ 達成</span>
-            </div>
-            <div style="font-size:13px;color:#5a7a9a;margin-bottom:2px;">身体機能スコア変化</div>
-            <div style="font-size:15.5px;font-weight:700;margin-bottom:1px;"><span style="color:#7a9ab8;">初回 12.4点</span> → <span style="color:#1a3a6a;">14.8点</span> <span style="background:#d0f0da;color:#1a8a50;font-size:11px;font-weight:700;padding:1px 4px;border-radius:3px;">改善</span></div>
-            <div style="font-size:13px;color:#5a7a9a;margin:5px 0 1px;">生活機能スコア変化</div>
-            <div style="font-size:15.5px;font-weight:700;margin-bottom:6px;"><span style="color:#7a9ab8;">初回 7.2点</span> → <span style="color:#1a3a6a;">6.1点</span> <span style="background:#d0f0da;color:#1a8a50;font-size:11px;font-weight:700;padding:1px 4px;border-radius:3px;">改善</span></div>
-          </div>
-        </div>
-        <div style="font-size:12px;color:#9abacc;">※身体・生活スコア変化：初回評価の平均値との比較。±2点以上で「改善」バッジ。継続率80%未満は赤「要確認」。デモデータ。</div>
-      </div>
-      <div class="kc">
-        <div class="kt">🏢 プログラム参加による介入効果（行政・経営層向け）</div>
-        <div style="background:#f0f7ff;border-left:4px solid #1a3a6a;padding:14px 16px;border-radius:0 8px 8px 0;font-size:13px;color:#2a3a6a;line-height:2.0;margin-bottom:12px;">
-          対象期間：2025年10月〜2026年4月&#x3000;対象：フレイル予防教室参加者<br>
-          フレイル改善率：<strong>62%</strong>（フレイル/プレフレイルから1段階以上改善）<br>
-          プログラム継続率：<strong>90%</strong>（80%以上出席で完遂）<br>
-          推定介護給付費抑制効果（年間推計）：<strong style="color:#1a3a6a;font-size:15.5px;">約1,240万円／年</strong><br>
-          <span style="font-size:11px;color:#7a9ab8;">※厚生労働省の地域別平均介護給付費に基づき試算。フレイルから健常への改善14名分を算出。</span>
-          <div style="margin-top:8px;padding:8px 10px;background:#e8f0ff;border-radius:6px;font-size:12px;color:#3a5a8a;">
-            本事業は理学療法士が主導する専門プログラムです。フレイルからの「改善」を通じて、将来的な介護費・医療費の増大を未然に防ぐ<strong>投資対効果の高い取り組み</strong>です。
-          </div>
-        </div>
+        <div class="kt">📥 データの書き出し</div>
         <div style="font-size:12px;color:#9abacc;margin-bottom:8px;">📥 詳細データはCSV出力でExcelに書き出せます。</div>
         <button type="button" class="bex bex-c" onclick="exportCsv('normal')">📥 通常CSV（今の受診者1名分）</button>
         <button type="button" class="bex bex-r" onclick="exportCsv('research')">🔬 学術用CSV（匿名・1名分）</button>
@@ -1725,7 +1656,7 @@ function p1ShowSarc() {
   sarcStep=0;
   sarcRender();
   document.getElementById('prog').style.width = '38%';
-  document.getElementById('hdr-sub').textContent = 'サルコペニアチェック（SARC-F）';
+  document.getElementById('hdr-sub').textContent = 'サルコペニア（加齢による筋力低下）チェック';
 }
 function sarcRender(){
   const it=SARC_QS[sarcStep];
@@ -2326,7 +2257,7 @@ function showSummary(){
     {icon:'🦵',label:'下腿周径（最大値）',skip:skipFlags.calf,val:`${calfMax.toFixed(1)} cm`,ok:calfMax>=calfCut,ref:`基準値 ${calfCut}cm以上`},
     {icon:'👄',label:'反復唾液嚥下テスト（RSST）',skip:skipFlags.rsst,val:`${rsst} 回/30秒`,ok:rsst>=3,ref:'基準値 3回以上'},
     {icon:'🥗',label:'簡易栄養状態評価（MNA®-SF）',skip:false,val:`${mnaTotal} / 14点`,ok:mnaTotal>=12,ref:'基準値 12点以上'},
-    (function(){const cc=sarcCalfPoints();const sf=sarcFTotal();const tot=sf+cc.pts;const suspect=cc.skip?(sf>=4):(tot>=11);return {icon:'🧬',label:'サルコペニア評価（SARC-CalF）',skip:false,val:cc.skip?`${sf} / 10点`:`${tot} / 20点`,ok:!suspect,ref:cc.skip?'基準値 4点未満':'基準値 11点未満'};})(),
+    (function(){const cc=sarcCalfPoints();const sf=sarcFTotal();const tot=sf+cc.pts;const suspect=cc.skip?(sf>=4):(tot>=11);return {icon:'🧬',label:'サルコペニア（加齢による筋力低下）',skip:false,val:cc.skip?`${sf} / 10点`:`${tot} / 20点`,ok:!suspect,ref:cc.skip?'基準値 4点未満':'基準値 11点未満'};})(),
   ];
   let html='';
   rows.forEach(r=>{
@@ -2585,7 +2516,7 @@ function buildTable() {
   const ws=S.walkSec>0?4/S.walkSec:0, gm=Math.max(S.gripR,S.gripL), cm=Math.max(S.calfR,S.calfL);
   const g=p3GripCut(), cv=p3CalfCut();
   const hasPV=cmpMode&&!!PV;
-  const pws=(hasPV&&PV.walkSec>0)?4/PV.walkSec:null;
+  const pws=(hasPV&&PV.walkSpeed!=null)?PV.walkSpeed:null;
   const sp=sppbReport(), mw=mwtReport();
   const b=S.sppbB||{ss:0,st:0,td:0};
   const rows=[
@@ -2893,7 +2824,7 @@ function p3BuildReport() {
     document.getElementById('cbtn').textContent='前回データと比較中';
     document.getElementById('cbtn').className='tbtn on';
     cmpMode=true;
-    document.getElementById('cmp-label').textContent=`今回（${ds}）vs 前回（${PV.date}）`;
+    document.getElementById('cmp-label').textContent=`今回（${ds}）vs 前回（${PV.date}）`+(PV.partial?'　※前回は旧版の記録のため、一部の項目のみ比較できます':'');
   }else{
     document.getElementById('cbtn').textContent='前回データなし';
     document.getElementById('cbtn').className='tbtn';
@@ -2997,29 +2928,49 @@ function frailParseDate(d){
   const dt=new Date(Number(p[0]), Number(p[1])-1, Number(p[2]));
   return isNaN(dt.getTime()) ? null : dt;
 }
+// v12z: 蓄積CSV1行を項目に分解する（再発行用データが無い旧レコードでも比較できるようにするため）
+function frailParseRow(row){
+  const f=String(row||'').split(',');
+  if(f.length<23) return null;
+  const n=v=>{ const x=parseFloat(v); return isNaN(x)?null:x; };
+  return { pid:f[0], name:f[1], date:f[2], age:n(f[3]), sex:f[4],
+    grip:n(f[5]), calf:n(f[6]), walk:n(f[7]), sppb:n(f[8]), mwt:n(f[9]), mwtPct:n(f[10]),
+    rsst:n(f[11]), bmi:n(f[12]), mna:n(f[13]), mmse:n(f[14]), jchs:n(f[15]), judge:f[16],
+    ps:n(f[17]), cls:n(f[18]), sarcF:n(f[19]), sarcCalf:n(f[20]), sarcJudge:f[21], skipStr:f[22] };
+}
 function frailBuildPrev(pid, curDate){
   try{
     const cur=frailParseDate(curDate);
     const cands=frailLoadRecords()
-      .filter(r=>String(r.pid)===String(pid) && r.date!==curDate && r.snap && r.snap.p2)
+      .filter(r=>String(r.pid)===String(pid) && r.date!==curDate)
       .map(r=>({r,t:frailParseDate(r.date)}))
       .filter(x=>x.t && (!cur || x.t<cur));
     if(!cands.length) return null;
     cands.sort((a,b)=>b.t-a.t);
     const prev=cands[0].r;
+    // 再発行用データが無い旧レコードは、蓄積CSVの行から分かる範囲だけ比較する
+    if(!(prev.snap && prev.snap.p2)){
+      const q=frailParseRow(prev.row);
+      if(!q) return null;
+      return { date:prev.date, partial:true, psScores:null,
+        psTotal:q.ps, clRisk:q.cls,
+        gripMax:q.grip, calfMax:q.calf, walkSpeed:q.walk,
+        standupSec:null, balScore:null,
+        sppbTotal:q.sppb, sppbMax:(q.sppb!=null?12:null), mwtDist:q.mwt };
+    }
     const keep=S;
     let pv=null;
     try{
       S=prev.snap.p2;
       const ps=calcPS(), sp=sppbReport(), mw=mwtReport(), sk=S.skipFlags||{};
       pv={
-        date:prev.date,
+        date:prev.date, partial:false,
         psScores:psForChart(ps),
         psTotal:calcPSTotal(ps),
         clRisk:calcCLTotal().risk,
         gripMax:sk.grip?null:Number(Math.max(S.gripR,S.gripL).toFixed(1)),
         calfMax:sk.calf?null:Number(Math.max(S.calfR,S.calfL).toFixed(1)),
-        walkSec:sk.walk?0:(S.walkSec||0),
+        walkSpeed:(sk.walk||!(S.walkSec>0))?null:4/S.walkSec,
         standupSec:sk.standup?null:S.standupSec,
         balScore:sk.sppbbal?null:sp.balScore,
         sppbTotal:sp.measured>0?sp.total:null,
@@ -3054,6 +3005,120 @@ function frailUpdateRecCount(){
   const el=document.getElementById('rec-count');
   if(el)el.textContent=`\uD83D\uDCBE \u3053\u306E\u7AEF\u672B\u306E\u84C4\u7A4D\u30C7\u30FC\u30BF\uFF1A${list.length} \u540D\u5206`;
   frailRenderRecList(list);
+  frailRenderKpi(list);
+}
+// ============================================================
+// v12z: 集団分析（この端末の蓄積データから実集計）
+// ============================================================
+function frailGripCutFor(age, sex){
+  const f = (sex==='女');
+  return (age>=50 && age<=64) ? (f?20:34) : (f?18:28);
+}
+function frailKpiStats(list){
+  const rows=(list||frailLoadRecords()).map(r=>frailParseRow(r.row)).filter(Boolean);
+  if(!rows.length) return null;
+  const ids=new Set(rows.map(r=>r.pid));
+  const ages=rows.map(r=>r.age).filter(v=>v!=null);
+  const dates=rows.map(r=>frailParseDate(r.date)).filter(Boolean).sort((a,b)=>a-b);
+  const fmt=d=>`${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()}`;
+  const cnt=v=>rows.filter(r=>r.judge===v).length;
+  // 該当率は「その項目を測定できた人」を分母にする
+  const rate=(pick,hit)=>{
+    const t=rows.filter(pick); if(!t.length) return null;
+    return { n:t.filter(hit).length, d:t.length, pct:Math.round(t.filter(hit).length/t.length*100) };
+  };
+  const avg=k=>{ const v=rows.map(r=>r[k]).filter(x=>x!=null); return v.length?(v.reduce((a,c)=>a+c,0)/v.length):null; };
+  return {
+    n:rows.length, people:ids.size,
+    male:rows.filter(r=>r.sex==='男').length, female:rows.filter(r=>r.sex==='女').length,
+    ageAvg:ages.length?(ages.reduce((a,c)=>a+c,0)/ages.length):null,
+    ageMin:ages.length?Math.min(...ages):null, ageMax:ages.length?Math.max(...ages):null,
+    from:dates.length?fmt(dates[0]):'—', to:dates.length?fmt(dates[dates.length-1]):'—',
+    frail:cnt('フレイル'), pre:cnt('プレフレイル'), robust:cnt('健常'),
+    sarc:rate(r=>r.sarcJudge==='疑い'||r.sarcJudge==='低リスク', r=>r.sarcJudge==='疑い'),
+    grip:rate(r=>r.grip!=null&&r.age!=null, r=>r.grip<frailGripCutFor(r.age,r.sex)),
+    walk:rate(r=>r.walk!=null, r=>r.walk<1.0),
+    sppb:rate(r=>r.sppb!=null, r=>r.sppb<10),
+    mwt:rate(r=>r.mwtPct!=null, r=>r.mwtPct<70),
+    mna:rate(r=>r.mna!=null, r=>r.mna<=11),
+    rsst:rate(r=>r.rsst!=null, r=>r.rsst<3),
+    psAvg:avg('ps'), clsAvg:avg('cls')
+  };
+}
+function frailRenderKpi(list){
+  const box=document.getElementById('kpi-body'); if(!box)return;
+  const st=frailKpiStats(list);
+  if(!st){
+    box.innerHTML=`<div class="kc"><div class="kt">📊 集団分析</div>
+      <div style="font-size:13px;color:#7a9ab8;line-height:1.8;">この端末にはまだ蓄積データがありません。<br>結果レポートを表示すると自動で蓄積され、ここに集計が表示されます。</div></div>`;
+    return;
+  }
+  const pc=(a)=>st.n?Math.round(a/st.n*100):0;
+  const bar=(label,r,color)=>{
+    if(!r) return `<div class="kbw"><div class="kbl"><span>${label}</span><span style="color:#b0c0d0;">測定なし</span></div><div class="kbb"><div class="kbf" style="width:0%;"></div></div></div>`;
+    return `<div class="kbw"><div class="kbl"><span>${label}</span><span style="font-weight:700;color:${color};">${r.pct}%（${r.n}/${r.d}名）</span></div>
+      <div class="kbb"><div class="kbf" style="width:${r.pct}%;background:${color};"></div></div></div>`;
+  };
+  const col=p=>p>=60?'#e03030':p>=40?'#e08030':'#1a5fa8';
+  box.innerHTML=`
+    <div class="kc">
+      <div class="kt">📊 受診状況（この端末の蓄積データ）</div>
+      <div class="kg">
+        <div class="ki"><div class="ki-l">記録件数</div><div class="ki-v">${st.n}<span class="ki-u">件</span></div><div class="ki-n">実人数 ${st.people}名</div></div>
+        <div class="ki"><div class="ki-l">平均年齢</div><div class="ki-v">${st.ageAvg!=null?st.ageAvg.toFixed(1):'—'}<span class="ki-u">歳</span></div><div class="ki-n">${st.ageMin!=null?`範囲：${st.ageMin}〜${st.ageMax}歳`:''}</div></div>
+        <div class="ki"><div class="ki-l">男女</div><div class="ki-v" style="font-size:17px;">${st.male} / ${st.female}</div><div class="ki-n">男性 / 女性</div></div>
+      </div>
+      <div style="font-size:12px;color:#7a9ab8;">集計期間：${st.from} 〜 ${st.to}</div>
+    </div>
+
+    <div class="kc">
+      <div class="kt">🚩 フレイル判定の内訳</div>
+      <div style="display:flex;gap:8px;margin-bottom:6px;">
+        <div style="flex:1;background:#fff0f0;border-radius:10px;padding:10px 12px;border-left:4px solid #e03030;text-align:center;">
+          <div style="font-size:12px;color:#e03030;font-weight:700;margin-bottom:3px;">🚩 フレイル</div>
+          <div style="font-size:29px;font-weight:800;color:#e03030;">${st.frail}<span style="font-size:14.5px;">名</span></div>
+          <div style="font-size:14.5px;color:#e03030;font-weight:600;">${pc(st.frail)}%</div></div>
+        <div style="flex:1;background:#fff8f0;border-radius:10px;padding:10px 12px;border-left:4px solid #e08030;text-align:center;">
+          <div style="font-size:12px;color:#e08030;font-weight:700;margin-bottom:3px;">⚠️ プレフレイル</div>
+          <div style="font-size:29px;font-weight:800;color:#e08030;">${st.pre}<span style="font-size:14.5px;">名</span></div>
+          <div style="font-size:14.5px;color:#e08030;font-weight:600;">${pc(st.pre)}%</div></div>
+        <div style="flex:1;background:#f0fff4;border-radius:10px;padding:10px 12px;border-left:4px solid #1a8a50;text-align:center;">
+          <div style="font-size:12px;color:#1a8a50;font-weight:700;margin-bottom:3px;">✅ 健常</div>
+          <div style="font-size:29px;font-weight:800;color:#1a8a50;">${st.robust}<span style="font-size:14.5px;">名</span></div>
+          <div style="font-size:14.5px;color:#1a8a50;font-weight:600;">${pc(st.robust)}%</div></div>
+      </div>
+      <div style="font-size:11.5px;color:#9abacc;">J-CHS基準（筋力・歩行速度・体重減少・疲労感・活動量）による判定。測定困難の項目は判定から除外されています。<br>件数ベースの集計です（同じ方が複数回受診している場合、その回数分カウントされます）。</div>
+    </div>
+
+    <div class="kc">
+      <div class="kt">📉 項目別の該当率（測定できた方を分母）</div>
+      ${bar('サルコペニア疑い（SARC-CalF）', st.sarc, col(st.sarc?st.sarc.pct:0))}
+      ${bar('筋力低下（握力が基準未満）', st.grip, col(st.grip?st.grip.pct:0))}
+      ${bar('歩行速度低下（1.0m/s未満）', st.walk, col(st.walk?st.walk.pct:0))}
+      ${bar('下肢機能低下（SPPB 10点未満）', st.sppb, col(st.sppb?st.sppb.pct:0))}
+      ${bar('持久力低下（6分間歩行 実測比70%未満）', st.mwt, col(st.mwt?st.mwt.pct:0))}
+      ${bar('低栄養リスク（MNA 11点以下）', st.mna, col(st.mna?st.mna.pct:0))}
+      ${bar('嚥下機能リスク（RSST 3回未満）', st.rsst, col(st.rsst?st.rsst.pct:0))}
+      <div style="font-size:11.5px;color:#9abacc;margin-top:4px;">「測定困難」で除外した項目は分母から外しています。分母が小さい項目の割合は参考値としてご覧ください。</div>
+    </div>
+
+    <div class="kc">
+      <div class="kt">📈 スコアの平均</div>
+      <div class="kg" style="grid-template-columns:repeat(2,1fr);">
+        <div class="ki"><div class="ki-l">身体機能スコア（高いほど良好）</div><div class="ki-v">${st.psAvg!=null?st.psAvg.toFixed(1):'—'}<span class="ki-u">点</span></div><div class="ki-n">満点25点（5項目×5点）</div></div>
+        <div class="ki"><div class="ki-l">生活機能リスク項目数（少ないほど良好）</div><div class="ki-v">${st.clsAvg!=null?st.clsAvg.toFixed(1):'—'}<span class="ki-u">項目</span></div><div class="ki-n">基本チェックリスト20項目中</div></div>
+      </div>
+      <div style="font-size:11.5px;color:#9abacc;">※測定困難の項目がある方は身体機能スコアの満点が下がるため、平均は参考値です。</div>
+    </div>
+
+    <div class="kc">
+      <div class="kt">ℹ️ この集計について</div>
+      <div style="font-size:12.5px;color:#5a7a9a;line-height:1.9;">
+        ・集計対象は<strong>この端末に今ある蓄積データだけ</strong>です。「🗑 蓄積データ消去」を押すと0に戻ります。<br>
+        ・タブレットが複数台ある場合、この画面では台ごとの集計しか出ません。<br>
+        ・<strong>事業全体の集計・前後比較・経年推移は、PCの「受診者管理表（Excel）」で行ってください。</strong>全件CSVを貼り付けると自動集計されます。
+      </div>
+    </div>`;
 }
 // v12x: 蓄積された受診者の一覧（PDF再発行用）
 function frailRenderRecList(list){
@@ -3064,7 +3129,7 @@ function frailRenderRecList(list){
     const can=!!(r.snap&&r.snap.p2);
     const btn=can
       ? `<button type="button" onclick="reissueRecord(${i})" style="flex:none;padding:7px 12px;border:0;border-radius:8px;background:#1a5fa8;color:#fff;font-size:12px;font-weight:700;cursor:pointer;">\uD83D\uDCC4 PDF再発行</button>`
-      : `<span style="flex:none;font-size:11px;color:#9abacc;">再発行不可</span>`;
+      : `<span style="flex:none;font-size:11px;color:#9abacc;">再発行不可（旧版で記録）</span>`;
     return `<div style="display:flex;align-items:center;gap:8px;padding:7px 2px;border-top:1px solid #e3ecf5;">
       <div style="flex:1;min-width:0;font-size:12.5px;color:#1a3a5c;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
         <strong>${r.pid}</strong>　${r.name||''}<span style="color:#7a9ab8;">　${r.date||''}</span>
@@ -3114,6 +3179,23 @@ function showTab(id, btn) {
 }
 
 // v12w: 次の受診者へ（前の方の入力値が残らないよう画面を作り直す）
+// v12z: 受診者を入力しなくても集団分析・CSV書き出し・PDF再発行を開けるようにする
+function openStaffPanel(){
+  let hasReport=false;
+  try{
+    const raw=localStorage.getItem('frail_phase2');
+    if(raw){ S=JSON.parse(raw); hasReport=!!(S&&S.pid); }
+  }catch(e){}
+  const tabs=document.querySelectorAll('#p3-report .tab');
+  // 個人レポートの中身が無いときは、そのタブを隠してKPIだけ見せる
+  if(tabs[0]) tabs[0].style.display = hasReport ? '' : 'none';
+  if(tabs[2]) tabs[2].style.display = hasReport ? '' : 'none';
+  go('p3-report');
+  if(tabs[1]) showTab('t-kpi', tabs[1]);
+  frailUpdateRecCount();
+  document.getElementById('hdr-sub').textContent='スタッフ用パネル';
+}
+
 let PDF_SAVED_FOR = null;
 function nextPatient(){
   var n = 0;
@@ -3182,6 +3264,7 @@ function printToPdf() {
 // Init
 // ============================================================
 p1CalcBmi();
+try{ frailUpdateRecCount(); }catch(e){}
 
 // v12x: 「PDF再発行」から開かれた場合は、保存済みレポートを復元して表示する
 (function initReissue(){
