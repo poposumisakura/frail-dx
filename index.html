@@ -2584,16 +2584,17 @@ function buildTable() {
   const _sr=calcSarcReport();
   const ws=S.walkSec>0?4/S.walkSec:0, gm=Math.max(S.gripR,S.gripL), cm=Math.max(S.calfR,S.calfL);
   const g=p3GripCut(), cv=p3CalfCut();
-  const pws=(cmpMode&&PV)?(PV.walkSec>0?4/PV.walkSec:0):null;
+  const hasPV=cmpMode&&!!PV;
+  const pws=(hasPV&&PV.walkSec>0)?4/PV.walkSec:null;
   const sp=sppbReport(), mw=mwtReport();
   const b=S.sppbB||{ss:0,st:0,td:0};
   const rows=[
-    {icon:'💪',name:'筋力（握力）',val:`${gm.toFixed(1)} kg`,ref:`基準${g}kg以上`,ok:gm>=g,skip:skip.grip,desc:`全身の筋力の指標。基準はAWGS 2025準拠（${S.age>=50&&S.age<=64?'50〜64歳':'65歳以上'}）`,prev:(cmpMode&&PV)?`${PV.gripMax} kg`:null,upGood:true,prevRaw:PV?PV.gripMax:null,curRaw:gm},
-    {icon:'🦿',name:'SPPB（下肢複合機能）',val:sp.measured>0?`${sp.total} / ${sp.maxTotal}点`:'測定困難',ref:'10点以上で良好（/12）',ok:sp.measured>0&&sp.total/sp.maxTotal>=0.75,skip:sp.measured===0,desc:'バランス・歩行・立ち上がりの合計（下記3項目の内訳）',prev:null,upGood:true,prevRaw:null,curRaw:sp.total},
-    {icon:'　',name:'└ 4m歩行速度',val:skip.walk?'測定困難':`${ws.toFixed(2)} m/s（${S.walkSec.toFixed(1)}秒）`,ref:'1.0m/s以上',ok:!skip.walk&&ws>=1.0,skip:skip.walk,desc:`SPPB歩行要素 ${sp.gaitScore==null?'−':sp.gaitScore}/4点。転倒・要介護リスクの最重要指標`,prev:null,upGood:true,prevRaw:null,curRaw:ws},
-    {icon:'　',name:'└ 5回立ち上がり',val:skip.standup?'測定困難':`${S.standupSec.toFixed(1)} 秒`,ref:'12秒以内',ok:!skip.standup&&S.standupSec<=12,skip:skip.standup,desc:`SPPB立ち上がり要素 ${sp.chairScore==null?'−':sp.chairScore}/4点。下肢筋力・瞬発力`,prev:null,upGood:false,prevRaw:null,curRaw:S.standupSec},
-    {icon:'　',name:'└ バランス',val:skip.sppbbal?'測定困難':`${sp.balScore}/4点`,ref:'4点満点',ok:!skip.sppbbal&&sp.balScore>=3,skip:skip.sppbbal,desc:`SPPBバランス要素。閉脚${b.ss}・ｾﾐﾀﾝﾃﾞﾑ${b.st}・ﾀﾝﾃﾞﾑ${b.td}秒（各最大10秒）`,prev:null,upGood:true,prevRaw:null,curRaw:sp.balScore},
-    {icon:'🏃',name:'6分間歩行（持久力）',val:mw.skip?'測定困難':`${mw.dist}m`,ref:mw.skip?'—':`予測${Math.round(mw.pred)}m・実測比${Math.round(mw.pct)}%`,ok:!mw.skip&&mw.score>=3,skip:mw.skip,desc:'全身持久力の指標。年齢・性別の予測距離（Enright式）に対する実測比で評価',prev:null,upGood:true,prevRaw:null,curRaw:mw.dist},
+    {icon:'💪',name:'筋力（握力）',val:`${gm.toFixed(1)} kg`,ref:`基準${g}kg以上`,ok:gm>=g,skip:skip.grip,desc:`全身の筋力の指標。基準はAWGS 2025準拠（${S.age>=50&&S.age<=64?'50〜64歳':'65歳以上'}）`,prev:(hasPV&&PV.gripMax!=null)?`${PV.gripMax.toFixed(1)} kg`:null,upGood:true,prevRaw:(hasPV&&PV.gripMax!=null)?PV.gripMax:null,curRaw:gm},
+    {icon:'🦿',name:'SPPB（下肢複合機能）',val:sp.measured>0?`${sp.total} / ${sp.maxTotal}点`:'測定困難',ref:'10点以上で良好（/12）',ok:sp.measured>0&&sp.total/sp.maxTotal>=0.75,skip:sp.measured===0,desc:'バランス・歩行・立ち上がりの合計（下記3項目の内訳）',prev:(hasPV&&PV.sppbTotal!=null)?`${PV.sppbTotal} / ${PV.sppbMax}点`:null,upGood:true,prevRaw:(hasPV&&PV.sppbTotal!=null)?PV.sppbTotal:null,curRaw:sp.total},
+    {icon:'　',name:'└ 4m歩行速度',val:skip.walk?'測定困難':`${ws.toFixed(2)} m/s（${S.walkSec.toFixed(1)}秒）`,ref:'1.0m/s以上',ok:!skip.walk&&ws>=1.0,skip:skip.walk,desc:`SPPB歩行要素 ${sp.gaitScore==null?'−':sp.gaitScore}/4点。転倒・要介護リスクの最重要指標`,prev:(pws!=null)?`${pws.toFixed(2)} m/s`:null,upGood:true,prevRaw:pws,curRaw:ws},
+    {icon:'　',name:'└ 5回立ち上がり',val:skip.standup?'測定困難':`${S.standupSec.toFixed(1)} 秒`,ref:'12秒以内',ok:!skip.standup&&S.standupSec<=12,skip:skip.standup,desc:`SPPB立ち上がり要素 ${sp.chairScore==null?'−':sp.chairScore}/4点。下肢筋力・瞬発力`,prev:(hasPV&&PV.standupSec!=null)?`${PV.standupSec.toFixed(1)} 秒`:null,upGood:false,prevRaw:(hasPV&&PV.standupSec!=null)?PV.standupSec:null,curRaw:S.standupSec},
+    {icon:'　',name:'└ バランス',val:skip.sppbbal?'測定困難':`${sp.balScore}/4点`,ref:'4点満点',ok:!skip.sppbbal&&sp.balScore>=3,skip:skip.sppbbal,desc:`SPPBバランス要素。閉脚${b.ss}・ｾﾐﾀﾝﾃﾞﾑ${b.st}・ﾀﾝﾃﾞﾑ${b.td}秒（各最大10秒）`,prev:(hasPV&&PV.balScore!=null)?`${PV.balScore}/4点`:null,upGood:true,prevRaw:(hasPV&&PV.balScore!=null)?PV.balScore:null,curRaw:sp.balScore},
+    {icon:'🏃',name:'6分間歩行（持久力）',val:mw.skip?'測定困難':`${mw.dist}m`,ref:mw.skip?'—':`予測${Math.round(mw.pred)}m・実測比${Math.round(mw.pct)}%`,ok:!mw.skip&&mw.score>=3,skip:mw.skip,desc:'全身持久力の指標。年齢・性別の予測距離（Enright式）に対する実測比で評価',prev:(hasPV&&PV.mwtDist!=null)?`${PV.mwtDist}m`:null,upGood:true,prevRaw:(hasPV&&PV.mwtDist!=null)?PV.mwtDist:null,curRaw:mw.dist},
   ];
   document.getElementById('mt').innerHTML =
     `<tr><th></th><th>項目</th><th>今回</th>${cmpMode?'<th>前回・変化</th>':''}<th>基準</th><th>判定</th><th>この項目について</th></tr>` +
@@ -2602,7 +2603,7 @@ function buildTable() {
       let prevCell='';
       if(cmpMode){
         if(r.skip)prevCell='<td style="color:#c0d0d8;">—</td>';
-        else if(r.prev&&r.prevRaw!==null){const df=r.curRaw-r.prevRaw;const gd=r.upGood?(df>0):(df<0);const dec=r.val.includes('m/s')?2:1;prevCell=`<td>${r.prev}<br><span class="${gd?'du':'dd'}">${gd?'▲':'▼'}${Math.abs(df).toFixed(dec)}</span></td>`;}
+        else if(r.prev&&r.prevRaw!==null){const df=r.curRaw-r.prevRaw;const gd=r.upGood?(df>0):(df<0);const dec=r.val.includes('m/s')?2:(r.val.includes('点')||r.val.includes('m')&&!r.val.includes('m/s')&&r.name.includes('6分間'))?0:1;prevCell=`<td>${r.prev}<br><span class="${gd?'du':'dd'}">${df>0?'▲':df<0?'▼':'→'}${Math.abs(df).toFixed(dec)}</span></td>`;}
         else prevCell='<td style="color:#c0d0d8;">—</td>';
       }
       return `<tr><td style="font-size:18.5px;text-align:center;">${r.icon}</td><td style="font-weight:600;white-space:nowrap;">${r.name}${r.skip?'<span class="skip-notice">測定困難</span>':''}</td><td style="font-weight:700;color:${r.skip?'#a0b0c0':'inherit'};">${r.skip?'—':r.val}</td>${cmpMode?prevCell:''}<td style="color:#7a9ab8;white-space:nowrap;">${r.ref}</td>${judgeCell}<td class="dc">${r.desc}</td></tr>`;
@@ -2872,6 +2873,9 @@ function p3BuildReport() {
   const an=(S.age>=50&&S.age<=64)?'<span style="font-size:13px;color:#9abacc;">　※AWGS 2025（50〜64歳）適用</span>':'';
   document.getElementById('rmeta').innerHTML=`${S.pid}　${nm} 様　${gl}　${S.age}歳${an}<br>身長 ${S.ht}cm／体重 ${S.wt}kg／BMI ${S.bmi.toFixed(1)}<br>健診日：${ds}　担当：${st}`;
 
+  // v12y: 同じIDの前回記録があれば読み込む（なければ null＝初回健診）
+  PV = frailBuildPrev(S.pid, (REISSUE&&REISSUE.date) ? REISSUE.date : new Date().toLocaleDateString('ja-JP'));
+
   const j=calcJCHS();
   document.getElementById('vbar').style.background=j.vc;
   const jTotal=j.its.filter(i=>!i.skip).length;
@@ -2889,7 +2893,7 @@ function p3BuildReport() {
     document.getElementById('cbtn').textContent='前回データと比較中';
     document.getElementById('cbtn').className='tbtn on';
     cmpMode=true;
-    document.getElementById('cmp-label').textContent=`今回（${ds}）vs 前回`;
+    document.getElementById('cmp-label').textContent=`今回（${ds}）vs 前回（${PV.date}）`;
   }else{
     document.getElementById('cbtn').textContent='前回データなし';
     document.getElementById('cbtn').className='tbtn';
@@ -2986,6 +2990,46 @@ function frailCurrentRow(){
     row:`${S.pid},${nm},${dt},${S.age},${S.gender==='male'?'\u7537':'\u5973'},${skip.grip?'ND':gm.toFixed(1)},${skip.calf?'ND':cm.toFixed(1)},${skip.walk?'ND':ws},${sppbStr},${mwtMStr},${mwtPctStr},${skip.rsst?'ND':S.rsstCnt},${S.bmi.toFixed(1)},${S.mnaTotal},${mmse},${j.sc},${j.vd},${psTotal},${clt.risk},${sr.sarcF},${sarcCalfStr},${sarcJudge},${skipStr}` };
 }
 let REISSUE = null; // 再発行モード時 {pid,date,staff}
+// v12y: 同じIDの「前回（別日・直近）」の記録から比較用データを復元する
+function frailParseDate(d){
+  const p=String(d||'').split(/[\/\-年月日\s]/).filter(x=>x!=='');
+  if(p.length<3) return null;
+  const dt=new Date(Number(p[0]), Number(p[1])-1, Number(p[2]));
+  return isNaN(dt.getTime()) ? null : dt;
+}
+function frailBuildPrev(pid, curDate){
+  try{
+    const cur=frailParseDate(curDate);
+    const cands=frailLoadRecords()
+      .filter(r=>String(r.pid)===String(pid) && r.date!==curDate && r.snap && r.snap.p2)
+      .map(r=>({r,t:frailParseDate(r.date)}))
+      .filter(x=>x.t && (!cur || x.t<cur));
+    if(!cands.length) return null;
+    cands.sort((a,b)=>b.t-a.t);
+    const prev=cands[0].r;
+    const keep=S;
+    let pv=null;
+    try{
+      S=prev.snap.p2;
+      const ps=calcPS(), sp=sppbReport(), mw=mwtReport(), sk=S.skipFlags||{};
+      pv={
+        date:prev.date,
+        psScores:psForChart(ps),
+        psTotal:calcPSTotal(ps),
+        clRisk:calcCLTotal().risk,
+        gripMax:sk.grip?null:Number(Math.max(S.gripR,S.gripL).toFixed(1)),
+        calfMax:sk.calf?null:Number(Math.max(S.calfR,S.calfL).toFixed(1)),
+        walkSec:sk.walk?0:(S.walkSec||0),
+        standupSec:sk.standup?null:S.standupSec,
+        balScore:sk.sppbbal?null:sp.balScore,
+        sppbTotal:sp.measured>0?sp.total:null,
+        sppbMax:sp.measured>0?sp.maxTotal:null,
+        mwtDist:mw.skip?null:mw.dist
+      };
+    } finally { S=keep; }
+    return pv;
+  }catch(e){ return null; }
+}
 function frailLoadRecords(){ try{ return JSON.parse(localStorage.getItem(FRAIL_REC_KEY)||'[]'); }catch(e){ return []; } }
 function frailRecordCurrent(){
   if(REISSUE) return; // 再発行のときは新しい記録を作らない
