@@ -676,6 +676,8 @@ body { background: #f0f4f8; font-family: 'Hiragino Sans','Yu Gothic',sans-serif;
 .mna3 { display: flex; gap: 5px; }
 .mbox { flex: 1; border-radius: 7px; padding: 6px 9px; text-align: center; border: 1.5px solid #e0e8f0; }
 .mbox.act { border-width: 2px; }
+.a-nx { flex-basis:100%; background:#1a8a50; color:#fff; padding:13px 5px; font-size:14px; }
+.a-nx:active { opacity:.8; }
 .ml { font-size: 9px; font-weight: 600; }
 .mr { font-size: 13px; font-weight: 800; margin: 2px 0; }
 .mn { font-size: 9px; font-weight: 700; }
@@ -1398,6 +1400,7 @@ body { background: #f0f4f8; font-family: 'Hiragino Sans','Yu Gothic',sans-serif;
         <button type="button" class="act a-pr" onclick="window.print()">🖨️ 印刷</button>
         <button type="button" class="act a-pd" onclick="printToPdf()">📄 PDF</button>
         <button type="button" class="act a-cs" onclick="exportCsv('normal')">📥 CSV</button>
+        <button type="button" class="act a-nx" onclick="nextPatient()">✅ 次の受診者へ（画面をリセット）</button>
       </div>
       <div class="acts" style="margin-top:-6px;margin-bottom:10px;font-size:11px;color:#9abacc;">💡 「📄 PDF」ボタンでそのまま2ページのPDFを保存できます（ファイルパス表記は付きません）。「🖨️ 印刷」で紙に出す際、用紙下部にファイルパス（file://…）が出る場合は、印刷ダイアログの「ヘッダーとフッター」をOFFにしてください。</div>
       <div id="rep">
@@ -3006,6 +3009,20 @@ function showTab(id, btn) {
   document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');
   frailUpdateRecCount();
+}
+
+// v12w: 次の受診者へ（前の方の入力値が残らないよう画面を作り直す）
+function nextPatient(){
+  var n = 0;
+  try { n = frailLoadRecords().length; } catch(e) {}
+  var msg = '次の受診者の入力に進みます。\n\n'
+          + '・この方の結果レポートPDFは保存しましたか？\n'
+          + '・この端末の蓄積データ：' + n + ' 名分（この操作では消えません）\n\n'
+          + 'よろしいですか？';
+  if(!window.confirm(msg)) return;
+  // 単なる reload だとブラウザが入力欄の値を復元してしまうため、
+  // 新規ナビゲーションとして開き直して測定値を確実にクリアする。
+  location.replace(location.pathname + '?n=' + Date.now());
 }
 
 // PDF出力：レポートを2枠(#rep-p1/#rep-p2)に分け、各枠をA4 1ページに収めて描画（必ず2ページ・file://フッターなし）
