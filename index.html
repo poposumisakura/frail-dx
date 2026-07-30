@@ -595,6 +595,7 @@ body { background: #f0f4f8; font-family: 'Hiragino Sans','Yu Gothic',sans-serif;
    ============================================================ */
 .rpt-screen { max-width: 860px; }
 .tabs { display: flex; margin-bottom: 14px; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 1px 5px rgba(0,0,0,.08); }
+.tab + .tab { border-left: 1px solid #dbe6f0; }
 .tab { flex: 1; padding: 11px 6px; font-size: 12px; font-weight: 600; border: none; background: white; color: #7a9ab8; cursor: pointer; border-bottom: 3px solid transparent; }
 .tab.on { color: #1a3a6a; border-bottom-color: #e87a30; background: #fdf6f0; }
 .card { background: white; border-radius: 14px; padding: 24px 22px; box-shadow: 0 2px 10px rgba(0,0,0,.08); margin-top: 14px; }
@@ -676,7 +677,7 @@ body { background: #f0f4f8; font-family: 'Hiragino Sans','Yu Gothic',sans-serif;
 .mna3 { display: flex; gap: 5px; }
 .mbox { flex: 1; border-radius: 7px; padding: 6px 9px; text-align: center; border: 1.5px solid #e0e8f0; }
 .mbox.act { border-width: 2px; }
-.a-nx { flex-basis:100%; background:#1a8a50; color:#fff; padding:13px 5px; font-size:14px; }
+.a-nx { flex-basis:100%; background:#cc2b2b; color:#fff; padding:14px 5px; font-size:15px; box-shadow:0 2px 6px rgba(204,43,43,.35); }
 .a-nx:active { opacity:.8; }
 .ml { font-size: 9px; font-weight: 600; }
 .mr { font-size: 13px; font-weight: 800; margin: 2px 0; }
@@ -1142,17 +1143,17 @@ body { background: #f0f4f8; font-family: 'Hiragino Sans','Yu Gothic',sans-serif;
       <div class="input-area">
         <div class="input-row">
           <div class="input-group"><span class="input-label">①閉脚 (秒)</span>
-            <div class="num-wrap"><input class="num-text" id="bal-ss" type="text" inputmode="numeric" value="10" oninput="onNI('bal-ss',0,10,0);judgeBalance()" onchange="judgeBalance()">
+            <div class="num-wrap"><input class="num-text" id="bal-ss" type="text" inputmode="decimal" value="10.0" oninput="onNI('bal-ss',0,10,1);judgeBalance()" onchange="judgeBalance()">
               <div class="spin-col"><button type="button" class="spin-btn up" onmousedown="ss('bal-ss',1,1,0,10,0,'judgeBalance')" onmouseup="stopS()" ontouchstart="ss('bal-ss',1,1,0,10,0,'judgeBalance')" ontouchend="stopS()">▲</button><button type="button" class="spin-btn down" onmousedown="ss('bal-ss',1,-1,0,10,0,'judgeBalance')" onmouseup="stopS()" ontouchstart="ss('bal-ss',1,-1,0,10,0,'judgeBalance')" ontouchend="stopS()">▼</button></div>
             </div>
           </div>
           <div class="input-group"><span class="input-label">②ｾﾐﾀﾝﾃﾞﾑ (秒)</span>
-            <div class="num-wrap"><input class="num-text" id="bal-st" type="text" inputmode="numeric" value="10" oninput="onNI('bal-st',0,10,0);judgeBalance()" onchange="judgeBalance()">
+            <div class="num-wrap"><input class="num-text" id="bal-st" type="text" inputmode="decimal" value="10.0" oninput="onNI('bal-st',0,10,1);judgeBalance()" onchange="judgeBalance()">
               <div class="spin-col"><button type="button" class="spin-btn up" onmousedown="ss('bal-st',1,1,0,10,0,'judgeBalance')" onmouseup="stopS()" ontouchstart="ss('bal-st',1,1,0,10,0,'judgeBalance')" ontouchend="stopS()">▲</button><button type="button" class="spin-btn down" onmousedown="ss('bal-st',1,-1,0,10,0,'judgeBalance')" onmouseup="stopS()" ontouchstart="ss('bal-st',1,-1,0,10,0,'judgeBalance')" ontouchend="stopS()">▼</button></div>
             </div>
           </div>
           <div class="input-group"><span class="input-label">③タンデム (秒)</span>
-            <div class="num-wrap"><input class="num-text" id="bal-td" type="text" inputmode="numeric" value="10" oninput="onNI('bal-td',0,10,0);judgeBalance()" onchange="judgeBalance()">
+            <div class="num-wrap"><input class="num-text" id="bal-td" type="text" inputmode="decimal" value="10.0" oninput="onNI('bal-td',0,10,1);judgeBalance()" onchange="judgeBalance()">
               <div class="spin-col"><button type="button" class="spin-btn up" onmousedown="ss('bal-td',1,1,0,10,0,'judgeBalance')" onmouseup="stopS()" ontouchstart="ss('bal-td',1,1,0,10,0,'judgeBalance')" ontouchend="stopS()">▲</button><button type="button" class="spin-btn down" onmousedown="ss('bal-td',1,-1,0,10,0,'judgeBalance')" onmouseup="stopS()" ontouchstart="ss('bal-td',1,-1,0,10,0,'judgeBalance')" ontouchend="stopS()">▼</button></div>
             </div>
           </div>
@@ -1169,7 +1170,7 @@ body { background: #f0f4f8; font-family: 'Hiragino Sans','Yu Gothic',sans-serif;
     <div class="section-title">測定 6 / 9　6分間歩行（持久力）</div>
     <div class="meas-card">
       <div class="meas-header"><span class="meas-icon">🏃</span><div><div class="meas-title">6分間歩行テスト（6MWT）</div><div class="meas-sub">6分間で歩いた距離を入力</div></div></div>
-      <div class="guide-box"><span class="guide-illust">📏</span><div class="guide-text"><div class="guide-title">測定のポイント</div>平坦な直線コース（例：30m）を往復し、6分間でできるだけ長く歩く。休んでもよいが時間は止めない。歩いた合計距離(m)を記録。<br><span style="color:#1a5fa8;font-weight:600;">年齢・性別の予測距離（Enright式）に対する達成率で評価します。</span></div></div>
+      <div class="guide-box"><span class="guide-illust">📏</span><div class="guide-text"><div class="guide-title">測定のポイント</div>平坦な直線コース（例：30m）を往復し、6分間でできるだけ長く歩く。休んでもよいが時間は止めない。歩いた合計距離(m)を記録。<br><span style="color:#1a5fa8;font-weight:600;">年齢・性別の予測距離（Enright式）に対する実測比で評価します。</span></div></div>
       <div class="input-area">
         <div class="input-row">
           <div class="input-group"><span class="input-label">歩行距離 (m)</span>
@@ -1179,7 +1180,7 @@ body { background: #f0f4f8; font-family: 'Hiragino Sans','Yu Gothic',sans-serif;
           </div>
           <span class="unit-label">m</span>
         </div>
-        <div class="calc-badge"><span class="calc-label">予測距離・達成率（自動）</span><span class="calc-val" id="mwt-pct" style="font-size:15px;">--</span></div>
+        <div class="calc-badge"><span class="calc-label">予測距離・実測比（自動）</span><span class="calc-val" id="mwt-pct" style="font-size:15px;">--</span></div>
         <div id="mwt-judge" class="judge-wrap ok-bg">✓　--</div>
         <div style="margin-top:10px;text-align:right;"><button type="button" id="mwt-skip-btn" onclick="toggleSkip('mwt')" style="font-size:12px;padding:6px 14px;border-radius:8px;border:1.5px solid #c0d0e0;background:white;color:#7a9ab8;cursor:pointer;">測定困難</button></div>
       </div>
@@ -1705,15 +1706,15 @@ function p1GoBack() {
 // ---- Phase 1: SARC-F（患者回答・3択） ----
 let p1Sarc = { s1:null, s2:null, s3:null, s4:null, s5:null };
 const SARC_QS=[
- {k:'s1',q:'重いもの（牛乳パック4〜5本ぶん・約4.5kg）を持ち上げて運ぶのは、どのくらい大変ですか？',
+ {k:'s1',e:'\uD83D\uDCAA',q:'重いもの（牛乳パック4〜5本ぶん・約4.5kg）を持ち上げて運ぶのは、どのくらい大変ですか？',
   opts:['まったく大変でない','少し大変','とても大変・できない']},
- {k:'s2',q:'部屋の中を歩いて移動するのは、どのくらい大変ですか？',
+ {k:'s2',e:'\uD83D\uDEB6',q:'部屋の中を歩いて移動するのは、どのくらい大変ですか？',
   opts:['まったく大変でない','少し大変','とても大変・補助具が必要・できない']},
- {k:'s3',q:'椅子やベッドから立ち上がるのは、どのくらい大変ですか？',
+ {k:'s3',e:'\uD83E\uDE91',q:'椅子やベッドから立ち上がるのは、どのくらい大変ですか？',
   opts:['まったく大変でない','少し大変','とても大変・介助が必要・できない']},
- {k:'s4',q:'階段を10段のぼるのは、どのくらい大変ですか？',
+ {k:'s4',e:'\uD83E\uDE9C',q:'階段を10段のぼるのは、どのくらい大変ですか？',
   opts:['まったく大変でない','少し大変','とても大変・できない']},
- {k:'s5',q:'この1年間で、何回くらい転びましたか？',
+ {k:'s5',e:'\u26A0\uFE0F',q:'この1年間で、何回くらい転びましたか？',
   opts:['転んでいない','1〜3回','4回以上']}
 ];
 let sarcStep=0;
@@ -1728,7 +1729,8 @@ function sarcRender(){
   const it=SARC_QS[sarcStep];
   document.getElementById('sarc-prog').textContent=(sarcStep+1)+' / 5';
   const v=p1Sarc[it.k];
-  let html=`<div style="font-size:23px;font-weight:700;color:#1a3a5c;line-height:1.7;margin-bottom:16px;"><span style="color:#1a5fa8;">${['①','②','③','④','⑤'][sarcStep]}</span>　${it.q}</div>`;
+  let html=`<div style="background:#f5f8ff;border:1px solid #e2ebf7;border-radius:14px;height:104px;display:flex;align-items:center;justify-content:center;font-size:56px;margin-bottom:14px;">${it.e}</div>`
+   + `<div style="font-size:23px;font-weight:700;color:#1a3a5c;line-height:1.7;margin-bottom:16px;"><span style="color:#1a5fa8;">${['①','②','③','④','⑤'][sarcStep]}</span>　${it.q}</div>`;
   it.opts.forEach((o,idx)=>{
     const sel=v===idx;
     html+=`<button type="button" onclick="p1SarcAnswer('${it.k}',${idx})" style="display:block;width:100%;margin:9px 0;padding:17px 16px;border-radius:12px;font-size:20.5px;font-weight:700;text-align:left;cursor:pointer;border:2.5px solid ${sel?'#1a5fa8':'#c8d8e8'};background:${sel?'#e8f2fc':'#fff'};color:${sel?'#1a5fa8':'#4a6a8a'};">${o}</button>`;
@@ -2041,7 +2043,7 @@ function judgeMwt(){
   if(skipFlags.mwt)return;
   const dist=getV('mwt-dist'), ht=getV('p2-ht'), wt=getV('p2-wt'), age=p2AgeValue;
   const pred=mwtPredicted(gender,age,ht,wt), pct=pred>0?dist/pred*100:0;
-  const pctEl=document.getElementById('mwt-pct'); if(pctEl)pctEl.textContent=`予測${Math.round(pred)}m / 達成${Math.round(pct)}%`;
+  const pctEl=document.getElementById('mwt-pct'); if(pctEl)pctEl.textContent=`予測${Math.round(pred)}m / 実測比${Math.round(pct)}%`;
   const sc=mwtScoreFromPct(pct);
   document.getElementById('mwt-judge').outerHTML=`<div id="mwt-judge">${jW(sc>=3,'おおむね良好','要強化')}</div>`;
 }
@@ -2318,7 +2320,7 @@ function showSummary(){
   const rows=[
     {icon:'🏋️',label:'握力（最大値）',skip:skipFlags.grip,val:`${grMax.toFixed(1)} kg`,ok:grMax>=cut,ref:`基準値 ${cutL}`},
     {icon:'🦿',label:'SPPB（下肢複合機能）',skip:sppbParts.length===0,val:`${sppbTot} / ${sppbMax}点`,ok:sppbMax>0&&sppbTot/sppbMax>=0.75,ref:'10点以上で良好（/12）'},
-    {icon:'🏃',label:'6分間歩行（持久力）',skip:skipFlags.mwt,val:`${dist}m（達成${Math.round(pct)}%）`,ok:mwtSc>=3,ref:'予測距離の70%以上'},
+    {icon:'🏃',label:'6分間歩行（持久力）',skip:skipFlags.mwt,val:`${dist}m（実測比${Math.round(pct)}%）`,ok:mwtSc>=3,ref:'予測距離の70%以上'},
     {icon:'🦵',label:'下腿周径（最大値）',skip:skipFlags.calf,val:`${calfMax.toFixed(1)} cm`,ok:calfMax>=calfCut,ref:`基準値 ${calfCut}cm以上`},
     {icon:'👄',label:'反復唾液嚥下テスト（RSST）',skip:skipFlags.rsst,val:`${rsst} 回/30秒`,ok:rsst>=3,ref:'基準値 3回以上'},
     {icon:'🥗',label:'簡易栄養状態評価（MNA®-SF）',skip:false,val:`${mnaTotal} / 14点`,ok:mnaTotal>=12,ref:'基準値 12点以上'},
@@ -2589,7 +2591,7 @@ function buildTable() {
     {icon:'　',name:'└ 4m歩行速度',val:skip.walk?'測定困難':`${ws.toFixed(2)} m/s（${S.walkSec.toFixed(1)}秒）`,ref:'1.0m/s以上',ok:!skip.walk&&ws>=1.0,skip:skip.walk,desc:`SPPB歩行要素 ${sp.gaitScore==null?'−':sp.gaitScore}/4点。転倒・要介護リスクの最重要指標`,prev:null,upGood:true,prevRaw:null,curRaw:ws},
     {icon:'　',name:'└ 5回立ち上がり',val:skip.standup?'測定困難':`${S.standupSec.toFixed(1)} 秒`,ref:'12秒以内',ok:!skip.standup&&S.standupSec<=12,skip:skip.standup,desc:`SPPB立ち上がり要素 ${sp.chairScore==null?'−':sp.chairScore}/4点。下肢筋力・瞬発力`,prev:null,upGood:false,prevRaw:null,curRaw:S.standupSec},
     {icon:'　',name:'└ バランス',val:skip.sppbbal?'測定困難':`${sp.balScore}/4点`,ref:'4点満点',ok:!skip.sppbbal&&sp.balScore>=3,skip:skip.sppbbal,desc:`SPPBバランス要素。閉脚${b.ss}・ｾﾐﾀﾝﾃﾞﾑ${b.st}・ﾀﾝﾃﾞﾑ${b.td}秒（各最大10秒）`,prev:null,upGood:true,prevRaw:null,curRaw:sp.balScore},
-    {icon:'🏃',name:'6分間歩行（持久力）',val:mw.skip?'測定困難':`${mw.dist}m`,ref:mw.skip?'—':`予測${Math.round(mw.pred)}m・達成${Math.round(mw.pct)}%`,ok:!mw.skip&&mw.score>=3,skip:mw.skip,desc:'全身持久力の指標。年齢・性別の予測距離（Enright式）に対する達成率で評価',prev:null,upGood:true,prevRaw:null,curRaw:mw.dist},
+    {icon:'🏃',name:'6分間歩行（持久力）',val:mw.skip?'測定困難':`${mw.dist}m`,ref:mw.skip?'—':`予測${Math.round(mw.pred)}m・実測比${Math.round(mw.pct)}%`,ok:!mw.skip&&mw.score>=3,skip:mw.skip,desc:'全身持久力の指標。年齢・性別の予測距離（Enright式）に対する実測比で評価',prev:null,upGood:true,prevRaw:null,curRaw:mw.dist},
   ];
   document.getElementById('mt').innerHTML =
     `<tr><th></th><th>項目</th><th>今回</th>${cmpMode?'<th>前回・変化</th>':''}<th>基準</th><th>判定</th><th>この項目について</th></tr>` +
@@ -2931,13 +2933,13 @@ function exportCsv(type){
   if(type==='research'){
     if(cs===false){alert('この受診者は研究利用のオプトアウトを希望されています。学術用CSVには出力されません。');return;}
     const cDate=S.consentDate||'';
-    const h='ID,記録日時,年齢,性別,握力kg,下腿周径cm,歩行速度m/s,SPPB点,6MWTm,6MWT達成%,RSST回,BMI,MNA点,MMSE点,J-CHSスコア,判定,身体機能スコア,生活機能スコア,SARC-F点,SARC-CalF点,サルコペニア判定,測定困難項目';
+    const h='ID,記録日時,年齢,性別,握力kg,下腿周径cm,歩行速度m/s,SPPB点,6MWTm,6MWT実測比%,RSST回,BMI,MNA点,MMSE点,J-CHSスコア,判定,身体機能スコア,生活機能スコア,SARC-F点,SARC-CalF点,サルコペニア判定,測定困難項目';
     const r=`${S.pid},${cDate},${S.age},${S.gender==='male'?'男':'女'},${skip.grip?'ND':gm.toFixed(1)},${skip.calf?'ND':cm.toFixed(1)},${skip.walk?'ND':ws},${sppbStr},${mwtMStr},${mwtPctStr},${skip.rsst?'ND':S.rsstCnt},${S.bmi.toFixed(1)},${S.mnaTotal},${mmse===null?'ND':mmse},${j.sc},${j.vd},${psTotal},${clt.risk},${sr.sarcF},${sarcCalfStr},${sarcJudge},${skipStr}`;
     csv=h+'\n'+r; fn=`frail_research_${S.pid}.csv`;
   }else{
     let nm='---'; try{ const p1d=JSON.parse(localStorage.getItem('frail_phase1')||'{}'); if(p1d.name) nm=p1d.name; }catch(e){}
     const dt=new Date().toLocaleDateString('ja-JP');
-    const h='ID,氏名,健診日,年齢,性別,握力kg,下腿周径cm,歩行速度m/s,SPPB点,6MWTm,6MWT達成%,RSST回,BMI,MNA点,MMSE点,J-CHSスコア,判定,身体機能スコア,生活機能スコア,SARC-F点,SARC-CalF点,サルコペニア判定,測定困難項目';
+    const h='ID,氏名,健診日,年齢,性別,握力kg,下腿周径cm,歩行速度m/s,SPPB点,6MWTm,6MWT実測比%,RSST回,BMI,MNA点,MMSE点,J-CHSスコア,判定,身体機能スコア,生活機能スコア,SARC-F点,SARC-CalF点,サルコペニア判定,測定困難項目';
     const r=`${S.pid},${nm},${dt},${S.age},${S.gender==='male'?'男':'女'},${skip.grip?'ND':gm.toFixed(1)},${skip.calf?'ND':cm.toFixed(1)},${skip.walk?'ND':ws},${sppbStr},${mwtMStr},${mwtPctStr},${skip.rsst?'ND':S.rsstCnt},${S.bmi.toFixed(1)},${S.mnaTotal},${mmse===null?'未実施':mmse},${j.sc},${j.vd},${psTotal},${clt.risk},${sr.sarcF},${sarcCalfStr},${sarcJudge},${skipStr}`;
     csv=h+'\n'+r; fn=`frail_${S.pid}_${new Date().toISOString().slice(0,10)}.csv`;
   }
@@ -2951,7 +2953,7 @@ function exportCsv(type){
 // v12: \u53D7\u8A3A\u8005\u30C7\u30FC\u30BF\u306E\u7AEF\u672B\u5185\u84C4\u7A4D\u3068\u5168\u4EF6CSV\u4E00\u62EC\u66F8\u304D\u51FA\u3057
 // ============================================================
 const FRAIL_REC_KEY='frail_records';
-const FRAIL_REC_HEADER='ID,\u6C0F\u540D,\u5065\u8A3A\u65E5,\u5E74\u9F62,\u6027\u5225,\u63E1\u529Bkg,\u4E0B\u817F\u5468\u5F84cm,\u6B69\u884C\u901F\u5EA6m/s,SPPB\u70B9,6MWTm,6MWT\u9054\u6210%,RSST\u56DE,BMI,MNA\u70B9,MMSE\u70B9,J-CHS\u30B9\u30B3\u30A2,\u5224\u5B9A,\u8EAB\u4F53\u6A5F\u80FD\u30B9\u30B3\u30A2,\u751F\u6D3B\u6A5F\u80FD\u30B9\u30B3\u30A2,SARC-F\u70B9,SARC-CalF\u70B9,\u30B5\u30EB\u30B3\u30DA\u30CB\u30A2\u5224\u5B9A,\u6E2C\u5B9A\u56F0\u96E3\u9805\u76EE';
+const FRAIL_REC_HEADER='ID,\u6C0F\u540D,\u5065\u8A3A\u65E5,\u5E74\u9F62,\u6027\u5225,\u63E1\u529Bkg,\u4E0B\u817F\u5468\u5F84cm,\u6B69\u884C\u901F\u5EA6m/s,SPPB\u70B9,6MWTm,6MWT\u5B9F\u6E2C\u6BD4%,RSST\u56DE,BMI,MNA\u70B9,MMSE\u70B9,J-CHS\u30B9\u30B3\u30A2,\u5224\u5B9A,\u8EAB\u4F53\u6A5F\u80FD\u30B9\u30B3\u30A2,\u751F\u6D3B\u6A5F\u80FD\u30B9\u30B3\u30A2,SARC-F\u70B9,SARC-CalF\u70B9,\u30B5\u30EB\u30B3\u30DA\u30CB\u30A2\u5224\u5B9A,\u6E2C\u5B9A\u56F0\u96E3\u9805\u76EE';
 function frailCurrentRow(){
   if(!S)return null;
   const gm=Math.max(S.gripR,S.gripL),cm=Math.max(S.calfR,S.calfL);
