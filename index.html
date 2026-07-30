@@ -1396,6 +1396,7 @@ body { background: #f0f4f8; font-family: 'Hiragino Sans','Yu Gothic',sans-serif;
       <button type="button" class="tab on" onclick="showTab('t-rep',this)">📄 個人レポート</button>
       <button type="button" class="tab"    onclick="showTab('t-kpi',this)">📊 KPI・集団分析</button><button type="button" class="tab" onclick="go('p3-name')" style="opacity:.85;">← 担当者確認へ戻る</button>
     </div>
+    <div id="reissue-banner" style="display:none;background:#fff4e5;border:1.5px solid #e8a55a;border-radius:10px;padding:10px 12px;margin-bottom:10px;font-size:12.5px;font-weight:700;color:#a05a10;"></div>
     <div id="t-rep">
       <div class="acts">
         <button type="button" class="act a-pr" onclick="window.print()">🖨️ 印刷</button>
@@ -1564,6 +1565,7 @@ body { background: #f0f4f8; font-family: 'Hiragino Sans','Yu Gothic',sans-serif;
           <div style="font-size:11.5px;color:#7a9ab8;margin-bottom:8px;">結果レポートを表示した受診者は自動でこの端末に蓄積されます。健診終了後に「全件CSV」を書き出してExcel管理表に貼り付け、確認後に「蓄積データ消去」を押してください。</div>
           <button type="button" class="bex bex-c" onclick="exportAllCsv()">📦 全件CSVを書き出す</button>
           <button type="button" class="bex" style="background:#fff;border:1.5px solid #d0a0a0;color:#a04040;" onclick="clearAllRecords()">🗑 蓄積データ消去</button>
+          <div id="rec-list"></div>
         </div>
       </div>
     </div>
@@ -2845,11 +2847,12 @@ function p3BuildReport() {
   }
 
   // 研究利用：同意UIは廃止。匿名統計として全件を院内研究に利用。
+  if(REISSUE && S.consentDate) consentDate = S.consentDate;
   if(!consentDate)consentDate=new Date().toISOString();
   S.consent = true;
   S.consentDate = consentDate;
   // MMSE: 測定9（MMSE画面）の採点結果から直接取得
-  S.mmse = (typeof mmTotal==='function') ? mmTotal() : null;
+  if(!REISSUE) S.mmse = (typeof mmTotal==='function') ? mmTotal() : null; // 再発行時は保存済みの点数を使う
   S.restHR = null; // 安静時心拍数は廃止（運動処方は使用しない）
   // Update localStorage with consent
   localStorage.setItem('frail_phase2', JSON.stringify(S));
@@ -2859,7 +2862,12 @@ function p3BuildReport() {
   try{ const p1d=JSON.parse(localStorage.getItem('frail_phase1')||'{}'); if(p1d.name) nm=p1d.name; }catch(e){}
   const st=document.getElementById('pt-staff').value.trim()||'___';
   const today=new Date();
-  const ds=`${today.getFullYear()}年${today.getMonth()+1}月${today.getDate()}日`;
+  // 再発行のときは、記録された当時の健診日を表示する
+  let ds=`${today.getFullYear()}年${today.getMonth()+1}月${today.getDate()}日`;
+  if(REISSUE&&REISSUE.date){
+    const dp=String(REISSUE.date).split(/[\/\-年月日]/).filter(x=>x!=='');
+    ds = dp.length>=3 ? `${dp[0]}年${Number(dp[1])}月${Number(dp[2])}日` : REISSUE.date;
+  }
   const gl=S.gender==='male'?'男性':'女性';
   const an=(S.age>=50&&S.age<=64)?'<span style="font-size:13px;color:#9abacc;">　※AWGS 2025（50〜64歳）適用</span>':'';
   document.getElementById('rmeta').innerHTML=`${S.pid}　${nm} 様　${gl}　${S.age}歳${an}<br>身長 ${S.ht}cm／体重 ${S.wt}kg／BMI ${S.bmi.toFixed(1)}<br>健診日：${ds}　担当：${st}`;
@@ -2970,23 +2978,71 @@ function frailCurrentRow(){
   const mmse=(S.mmse===null||S.mmse===undefined)?'\u672A\u5B9F\u65BD':S.mmse;
   let nm='---'; try{ const p1d=JSON.parse(localStorage.getItem('frail_phase1')||'{}'); if(p1d.name) nm=p1d.name; }catch(e){}
   const dt=new Date().toLocaleDateString('ja-JP');
-  return { pid:String(S.pid), date:dt,
+  let p1snap={}; try{ p1snap=JSON.parse(localStorage.getItem('frail_phase1')||'{}'); }catch(e){}
+  const staffNow=(document.getElementById('pt-staff')||{}).value||'';
+  return { pid:String(S.pid), date:dt, name:nm,
+    // v12x: レポートを描き直すのに必要な一式を保存し、後からPDFを再発行できるようにする
+    snap:{ p1:p1snap, p2:S, staff:(REISSUE&&REISSUE.staff)||staffNow },
     row:`${S.pid},${nm},${dt},${S.age},${S.gender==='male'?'\u7537':'\u5973'},${skip.grip?'ND':gm.toFixed(1)},${skip.calf?'ND':cm.toFixed(1)},${skip.walk?'ND':ws},${sppbStr},${mwtMStr},${mwtPctStr},${skip.rsst?'ND':S.rsstCnt},${S.bmi.toFixed(1)},${S.mnaTotal},${mmse},${j.sc},${j.vd},${psTotal},${clt.risk},${sr.sarcF},${sarcCalfStr},${sarcJudge},${skipStr}` };
 }
+let REISSUE = null; // 再発行モード時 {pid,date,staff}
 function frailLoadRecords(){ try{ return JSON.parse(localStorage.getItem(FRAIL_REC_KEY)||'[]'); }catch(e){ return []; } }
 function frailRecordCurrent(){
+  if(REISSUE) return; // 再発行のときは新しい記録を作らない
   try{
     const rec=frailCurrentRow(); if(!rec)return;
     const list=frailLoadRecords();
     const idx=list.findIndex(r=>r.pid===rec.pid&&r.date===rec.date);
     if(idx>=0)list[idx]=rec; else list.push(rec);
-    localStorage.setItem(FRAIL_REC_KEY,JSON.stringify(list));
+    try{
+      localStorage.setItem(FRAIL_REC_KEY,JSON.stringify(list));
+    }catch(err){
+      // 端末の保存容量がいっぱいの場合は、再発行用データを省いて集計用の1行だけ残す
+      const slim=list.map(r=>({pid:r.pid,date:r.date,name:r.name,row:r.row}));
+      localStorage.setItem(FRAIL_REC_KEY,JSON.stringify(slim));
+      alert('端末の保存容量が上限に近づいたため、PDF再発行用のデータを省いて保存しました。\n集計用データ（全件CSV）は保持されています。早めに全件CSVを書き出し、蓄積データを消去してください。');
+    }
     frailUpdateRecCount();
   }catch(e){}
 }
 function frailUpdateRecCount(){
+  const list=frailLoadRecords();
   const el=document.getElementById('rec-count');
-  if(el)el.textContent=`\uD83D\uDCBE \u3053\u306E\u7AEF\u672B\u306E\u84C4\u7A4D\u30C7\u30FC\u30BF\uFF1A${frailLoadRecords().length} \u540D\u5206`;
+  if(el)el.textContent=`\uD83D\uDCBE \u3053\u306E\u7AEF\u672B\u306E\u84C4\u7A4D\u30C7\u30FC\u30BF\uFF1A${list.length} \u540D\u5206`;
+  frailRenderRecList(list);
+}
+// v12x: 蓄積された受診者の一覧（PDF再発行用）
+function frailRenderRecList(list){
+  const box=document.getElementById('rec-list'); if(!box)return;
+  list = list || frailLoadRecords();
+  if(list.length===0){ box.innerHTML=''; return; }
+  const rows=list.map((r,i)=>{
+    const can=!!(r.snap&&r.snap.p2);
+    const btn=can
+      ? `<button type="button" onclick="reissueRecord(${i})" style="flex:none;padding:7px 12px;border:0;border-radius:8px;background:#1a5fa8;color:#fff;font-size:12px;font-weight:700;cursor:pointer;">\uD83D\uDCC4 PDF再発行</button>`
+      : `<span style="flex:none;font-size:11px;color:#9abacc;">再発行不可</span>`;
+    return `<div style="display:flex;align-items:center;gap:8px;padding:7px 2px;border-top:1px solid #e3ecf5;">
+      <div style="flex:1;min-width:0;font-size:12.5px;color:#1a3a5c;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+        <strong>${r.pid}</strong>　${r.name||''}<span style="color:#7a9ab8;">　${r.date||''}</span>
+      </div>${btn}</div>`;
+  }).reverse().join('');
+  box.innerHTML=`<div style="margin-top:10px;padding-top:4px;">
+    <div style="font-size:12px;font-weight:700;color:#1a3a5c;margin-bottom:2px;">\uD83D\uDCCB 蓄積されている受診者（新しい順）</div>
+    <div style="font-size:11px;color:#7a9ab8;margin-bottom:4px;">PDFを保存し忘れた方は「PDF再発行」から出し直せます。</div>
+    ${rows}</div>`;
+}
+// v12x: 過去の受診者のレポートを復元してPDFを出し直す
+function reissueRecord(i){
+  const list=frailLoadRecords();
+  const r=list[i];
+  if(!r||!r.snap||!r.snap.p2){ alert('この受診者は再発行用データがないため出し直せません。'); return; }
+  if(!window.confirm(`${r.pid}　${r.name||''} 様（${r.date}）のレポートを開き直します。\n\n・入力中の受診者がいる場合、その入力内容は失われます\n・蓄積データの件数は増えません\n\nよろしいですか？`)) return;
+  try{
+    localStorage.setItem('frail_phase1', JSON.stringify(r.snap.p1||{}));
+    localStorage.setItem('frail_phase2', JSON.stringify(r.snap.p2));
+    sessionStorage.setItem('frail_reissue', JSON.stringify({pid:r.pid, date:r.date, staff:(r.snap.staff||'')}));
+  }catch(e){ alert('再発行の準備に失敗しました。'); return; }
+  location.replace(location.pathname + '?reissue=1&n=' + Date.now());
 }
 function exportAllCsv(){
   const list=frailLoadRecords();
@@ -3014,11 +3070,16 @@ function showTab(id, btn) {
 }
 
 // v12w: 次の受診者へ（前の方の入力値が残らないよう画面を作り直す）
+let PDF_SAVED_FOR = null;
 function nextPatient(){
   var n = 0;
   try { n = frailLoadRecords().length; } catch(e) {}
+  var curPid = null;
+  try { curPid = String((JSON.parse(localStorage.getItem('frail_phase2')||'{}')).pid || ''); } catch(e) {}
+  var unsaved = curPid && PDF_SAVED_FOR !== curPid;
   var msg = '次の受診者の入力に進みます。\n\n'
-          + '・この方の結果レポートPDFは保存しましたか？\n'
+          + (unsaved ? '⚠️ この方のPDFはまだ保存されていません。\n先に「📄 PDF」を押してください。\n\n'
+                     : '・この方の結果レポートPDFは保存済みです。\n')
           + '・この端末の蓄積データ：' + n + ' 名分（この操作では消えません）\n\n'
           + 'よろしいですか？';
   if(!window.confirm(msg)) return;
@@ -3061,7 +3122,14 @@ function printToPdf() {
     pdf.addPage();
     const b=place(c2);
     pdf.addImage(c2.toDataURL('image/jpeg',0.98),'JPEG',b.x,b.y,b.w,b.h);
-    pdf.save(`frail_${pid}_${new Date().toISOString().slice(0,10)}.pdf`);
+    // 再発行のときは当時の健診日をファイル名に使う
+    let fdate = new Date().toISOString().slice(0,10);
+    if(REISSUE&&REISSUE.date){
+      const dp=String(REISSUE.date).split(/[\/\-年月日]/).filter(x=>x!=='');
+      if(dp.length>=3) fdate=`${dp[0]}-${String(dp[1]).padStart(2,'0')}-${String(dp[2]).padStart(2,'0')}`;
+    }
+    pdf.save(`frail_${pid}_${fdate}.pdf`);
+    PDF_SAVED_FOR = pid; // v12x: PDF保存済みの受診者を記録
     restore();
   }).catch(err=>{ restore(); alert('PDF生成中にエラーが発生しました。「印刷」→「PDFに保存」をお試しください。'); });
 }
@@ -3070,6 +3138,24 @@ function printToPdf() {
 // Init
 // ============================================================
 p1CalcBmi();
+
+// v12x: 「PDF再発行」から開かれた場合は、保存済みレポートを復元して表示する
+(function initReissue(){
+  if(location.search.indexOf('reissue=1')<0) return;
+  let info=null;
+  try{ info=JSON.parse(sessionStorage.getItem('frail_reissue')||'null'); }catch(e){}
+  sessionStorage.removeItem('frail_reissue');
+  if(!info) return;
+  REISSUE=info;
+  const staffEl=document.getElementById('pt-staff');
+  if(staffEl) staffEl.value=info.staff||'';
+  try{ p3BuildReport(); }catch(e){ alert('レポートの復元に失敗しました。'); return; }
+  const banner=document.getElementById('reissue-banner');
+  if(banner){
+    banner.style.display='block';
+    banner.textContent=`再発行モード：${info.pid} 様（${info.date}）のレポートです。「📄 PDF」で保存してください。新しい記録は追加されません。`;
+  }
+})();
 </script>
 
 <!-- ===== v12w: Service Worker 登録（オフライン動作用） ===== -->
