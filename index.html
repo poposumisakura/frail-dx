@@ -1185,6 +1185,56 @@ body { background: #f0f4f8; font-family: 'Hiragino Sans','Yu Gothic',sans-serif;
         </div>
         <div class="calc-badge"><span class="calc-label">予測距離・実測比（自動）</span><span class="calc-val" id="mwt-pct" style="font-size:15px;">--</span></div>
         <div id="mwt-judge" class="judge-wrap ok-bg">✓　--</div>
+
+        <!-- v13: 6分タイマー＋周回カウンタ -->
+        <div id="mwt-panel" style="margin-top:14px;background:#f5f8ff;border:1.5px solid #c8dcf0;border-radius:12px;padding:14px 16px;">
+          <div style="font-size:13px;font-weight:700;color:#1a3a5c;margin-bottom:8px;">⏱ 6分間タイマー・周回カウンタ</div>
+
+          <div id="mwt-clockbox" style="background:#fff;border-radius:12px;padding:12px 10px;text-align:center;border:2px solid #dbe6f0;">
+            <div id="mwt-clock" style="font-size:60px;font-weight:800;line-height:1.05;color:#1a3a5c;font-variant-numeric:tabular-nums;">6:00</div>
+            <div id="mwt-cue" style="font-size:17px;font-weight:700;color:#1a5fa8;min-height:26px;margin-top:2px;">スタートを押してください</div>
+          </div>
+
+          <div style="display:flex;gap:8px;margin-top:10px;">
+            <button type="button" id="mwt-run-btn" onclick="mwtToggle()" style="flex:2;padding:14px 6px;border:0;border-radius:10px;background:#1a8a50;color:#fff;font-size:16px;font-weight:800;cursor:pointer;">▶ スタート</button>
+            <button type="button" onclick="mwtReset()" style="flex:1;padding:14px 6px;border:1.5px solid #c0d0e0;border-radius:10px;background:#fff;color:#7a9ab8;font-size:14px;font-weight:700;cursor:pointer;">↺ リセット</button>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:8px;margin-top:12px;flex-wrap:wrap;">
+            <span style="font-size:13px;font-weight:700;color:#5a7a9a;">片道コース長</span>
+            <input id="mwt-course" type="text" inputmode="numeric" value="30" oninput="mwtCalc()" style="width:64px;text-align:center;font-size:17px;font-weight:700;padding:7px 4px;border:1.5px solid #c8d8e8;border-radius:8px;">
+            <span style="font-size:13px;color:#7a9ab8;">m（端まで行ったら1カウント）</span>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:10px;margin-top:10px;">
+            <button type="button" onclick="mwtLap(-1)" style="width:60px;height:60px;border:1.5px solid #c0d0e0;border-radius:12px;background:#fff;color:#7a9ab8;font-size:26px;font-weight:800;cursor:pointer;">−</button>
+            <div style="flex:1;text-align:center;">
+              <div style="font-size:12px;color:#7a9ab8;">片道カウント</div>
+              <div id="mwt-lap" style="font-size:38px;font-weight:800;color:#1a3a5c;line-height:1.1;">0</div>
+            </div>
+            <button type="button" onclick="mwtLap(1)" style="width:96px;height:60px;border:0;border-radius:12px;background:#1a5fa8;color:#fff;font-size:26px;font-weight:800;cursor:pointer;">＋</button>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:8px;margin-top:10px;">
+            <span style="font-size:13px;font-weight:700;color:#5a7a9a;">端数</span>
+            <input id="mwt-extra" type="text" inputmode="numeric" value="0" oninput="mwtCalc()" style="width:74px;text-align:center;font-size:17px;font-weight:700;padding:7px 4px;border:1.5px solid #c8d8e8;border-radius:8px;">
+            <span style="font-size:13px;color:#7a9ab8;">m（最後の折り返し以降）</span>
+          </div>
+
+          <div style="margin-top:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+            <div style="flex:1;min-width:150px;background:#fff;border-radius:10px;padding:9px 12px;border:1.5px solid #dbe6f0;">
+              <span style="font-size:12px;color:#7a9ab8;">合計距離</span>
+              <span id="mwt-total" style="font-size:26px;font-weight:800;color:#1a3a5c;margin-left:8px;">0</span>
+              <span style="font-size:13px;color:#7a9ab8;"> m</span>
+            </div>
+            <button type="button" onclick="mwtApply()" style="padding:13px 16px;border:0;border-radius:10px;background:#1a8a50;color:#fff;font-size:14px;font-weight:800;cursor:pointer;">↑ この距離を入力欄に反映</button>
+          </div>
+
+          <div style="margin-top:12px;padding-top:10px;border-top:1px solid #dbe6f0;">
+            <button type="button" onclick="soundTest()" style="padding:9px 14px;border:1.5px solid #c0d0e0;border-radius:9px;background:#fff;color:#1a5fa8;font-size:13px;font-weight:700;cursor:pointer;">🔊 音のテスト</button>
+            <div id="mwt-sound-state" style="font-size:11.5px;color:#7a9ab8;margin-top:6px;line-height:1.6;">1分ごと・残り15秒・終了時に音と画面表示でお知らせします。音が鳴らないときは、iPad横の消音スイッチ（オレンジが見えている状態）と音量をご確認ください。</div>
+          </div>
+        </div>
         <div style="margin-top:10px;text-align:right;"><button type="button" id="mwt-skip-btn" onclick="toggleSkip('mwt')" style="font-size:12px;padding:6px 14px;border-radius:8px;border:1.5px solid #c0d0e0;background:white;color:#7a9ab8;cursor:pointer;">測定困難</button></div>
       </div>
     </div>
@@ -2016,10 +2066,167 @@ function stopRsstTimer(){
   document.getElementById('rsst-start-btn').textContent='▶ 30秒スタート';
 }
 
-// Beep
-function beep(freq,dur,vol){
-  try{const ctx=new(window.AudioContext||window.webkitAudioContext)();const osc=ctx.createOscillator();const gain=ctx.createGain();osc.connect(gain);gain.connect(ctx.destination);osc.frequency.value=freq;gain.gain.value=vol||0.3;osc.start();osc.stop(ctx.currentTime+dur);setTimeout(()=>ctx.close(),dur*1000+200);}catch(e){}
+// Beep（v13: iPad対策）
+// 旧実装は beep() のたびに AudioContext を作っていた。iOSでは
+//  ①ユーザー操作の中で作られていない AudioContext は suspended のまま鳴らない
+//  ②AudioContext を作りすぎると以後すべて無音になる
+// という制約があるため、1つだけ作って使い回し、毎回 resume() する方式に変更。
+let AUDIO_CTX = null;
+function audioUnlock(){
+  try{
+    if(!AUDIO_CTX){
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if(!AC) return null;
+      AUDIO_CTX = new AC();
+    }
+    if(AUDIO_CTX.state === 'suspended') AUDIO_CTX.resume();
+    return AUDIO_CTX;
+  }catch(e){ return null; }
 }
+// 最初の画面タッチで音を有効化しておく（iOSはこれが無いと一切鳴らない）
+['touchend','mousedown','keydown'].forEach(ev=>{
+  document.addEventListener(ev, function once(){ audioUnlock(); }, {passive:true});
+});
+function beep(freq,dur,vol){
+  try{
+    const ctx=audioUnlock(); if(!ctx) return;
+    const osc=ctx.createOscillator(), gain=ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.type='sine';
+    osc.frequency.value=freq;
+    const t=ctx.currentTime;
+    gain.gain.setValueAtTime(0.0001,t);
+    gain.gain.exponentialRampToValueAtTime(vol||0.3, t+0.01);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t+(dur||0.15));
+    osc.start(t); osc.stop(t+(dur||0.15)+0.02);
+  }catch(e){}
+}
+function soundTest(){
+  const ctx=audioUnlock();
+  beepStart();
+  const el=document.getElementById('mwt-sound-state');
+  if(el){
+    el.textContent = ctx ? ('音を再生しました（状態：'+ctx.state+'）。聞こえない場合はiPad横の消音スイッチと音量をご確認ください。')
+                         : 'この端末では音を鳴らせません。画面表示で計測してください。';
+    el.style.color = ctx ? '#1a8a50' : '#e03030';
+  }
+}
+// ============================================================
+// v13: 6分間歩行テスト用タイマー・周回カウンタ
+//   声かけの内容とタイミングは ATS Statement: Guidelines for the
+//   Six-Minute Walk Test (Am J Respir Crit Care Med 2002;166:111-117)
+//   の標準手順に沿って当院用に整理したもの。
+// ============================================================
+const MWT_TOTAL = 360; // 秒
+const MWT_CUES = {
+  360: 'それでは、はじめてください',
+  300: 'うまく歩けています。あと5分です',
+  240: 'その調子です。あと4分です',
+  180: 'うまく歩けています。あと3分です',
+  120: 'その調子です。あと2分です',
+   60: 'うまく歩けています。あと1分です',
+   15: 'まもなく「止まってください」と言います',
+    0: '止まってください'
+};
+let mwtLeft = MWT_TOTAL, mwtTimer = null, mwtLaps = 0;
+
+function mwtFmt(sec){
+  sec = Math.max(0, sec);
+  const m = Math.floor(sec/60), s = sec%60;
+  return m + ':' + String(s).padStart(2,'0');
+}
+function mwtFlash(color){
+  const box = document.getElementById('mwt-clockbox');
+  if(!box) return;
+  const prev = box.style.background;
+  box.style.background = color;
+  setTimeout(()=>{ box.style.background = prev || '#fff'; }, 450);
+}
+function mwtShowCue(text, strong){
+  const el = document.getElementById('mwt-cue');
+  if(!el) return;
+  el.textContent = text;
+  el.style.color = strong ? '#e03030' : '#1a5fa8';
+}
+function mwtRender(){
+  const c = document.getElementById('mwt-clock');
+  if(c){
+    c.textContent = mwtFmt(mwtLeft);
+    c.style.color = mwtLeft<=15 ? '#e03030' : '#1a3a5c';
+  }
+  const b = document.getElementById('mwt-run-btn');
+  if(b){
+    const running = !!mwtTimer;
+    b.textContent = running ? '⏸ 一時停止' : (mwtLeft===MWT_TOTAL ? '▶ スタート' : '▶ 再開');
+    b.style.background = running ? '#e08030' : '#1a8a50';
+  }
+}
+function mwtTick(){
+  mwtLeft--;
+  if(MWT_CUES[mwtLeft] !== undefined){
+    const last = (mwtLeft===0);
+    mwtShowCue(MWT_CUES[mwtLeft], last || mwtLeft===15);
+    mwtFlash(last ? '#ffe6e6' : '#e8f4ff');
+    if(last){ beepEnd(); setTimeout(beepEnd,450); }
+    else if(mwtLeft===15){ beep(880,0.18,0.5); }
+    else { beep(660,0.14,0.4); }
+  }
+  if(mwtLeft<=5 && mwtLeft>0){ beep(1046,0.09,0.45); mwtFlash('#fff4e0'); }
+  if(mwtLeft<=0){
+    clearInterval(mwtTimer); mwtTimer=null; mwtLeft=0;
+    mwtReleaseWake();
+  }
+  mwtRender();
+}
+let mwtWake = null;
+async function mwtRequestWake(){
+  try{ if('wakeLock' in navigator){ mwtWake = await navigator.wakeLock.request('screen'); } }catch(e){}
+}
+function mwtReleaseWake(){ try{ if(mwtWake){ mwtWake.release(); mwtWake=null; } }catch(e){} }
+
+function mwtToggle(){
+  audioUnlock();
+  if(mwtTimer){ clearInterval(mwtTimer); mwtTimer=null; mwtReleaseWake(); mwtRender(); return; }
+  if(mwtLeft<=0) mwtLeft = MWT_TOTAL;
+  if(mwtLeft===MWT_TOTAL){ mwtShowCue(MWT_CUES[360], false); mwtFlash('#e8f4ff'); beepStart(); }
+  mwtRequestWake();
+  mwtTimer = setInterval(mwtTick, 1000);
+  mwtRender();
+}
+function mwtReset(){
+  if(mwtTimer){ clearInterval(mwtTimer); mwtTimer=null; }
+  mwtReleaseWake();
+  mwtLeft = MWT_TOTAL; mwtLaps = 0;
+  const l=document.getElementById('mwt-lap'); if(l) l.textContent='0';
+  const e=document.getElementById('mwt-extra'); if(e) e.value='0';
+  mwtShowCue('スタートを押してください', false);
+  mwtCalc(); mwtRender();
+}
+function mwtLap(d){
+  mwtLaps = Math.max(0, mwtLaps + d);
+  const l=document.getElementById('mwt-lap'); if(l) l.textContent=mwtLaps;
+  if(d>0) beep(1200,0.06,0.25);
+  mwtCalc();
+}
+function mwtTotalDist(){
+  const course = parseFloat((document.getElementById('mwt-course')||{}).value) || 0;
+  const extra  = parseFloat((document.getElementById('mwt-extra')||{}).value) || 0;
+  return Math.round(mwtLaps*course + extra);
+}
+function mwtCalc(){
+  const t=document.getElementById('mwt-total');
+  if(t) t.textContent = mwtTotalDist();
+}
+function mwtApply(){
+  const d = mwtTotalDist();
+  if(d<=0){ alert('片道カウントまたは端数を入力してください。'); return; }
+  const inp = document.getElementById('mwt-dist');
+  inp.value = Math.min(900, d);
+  if(typeof judgeMwt==='function') judgeMwt();
+  inp.style.background='#e6f7ec';
+  setTimeout(()=>{ inp.style.background=''; }, 900);
+}
+
 function beepStart(){beep(660,0.12,0.4);setTimeout(()=>beep(770,0.12,0.4),160);setTimeout(()=>beep(880,0.18,0.5),320);}
 function beepEnd(){beep(880,0.12,0.4);setTimeout(()=>beep(660,0.2,0.5),150);}
 
