@@ -1508,6 +1508,7 @@ body { background: #f0f4f8; font-family: 'Hiragino Sans','Yu Gothic',sans-serif;
           <button type="button" class="tbtn" id="cbtn" onclick="toggleCmp()">比較OFF</button>
           <span style="color:#9a7a5a;font-size:12px;margin-left:6px;" id="cmp-label"></span>
         </div>
+        <div id="cmp-summary" style="display:none;"></div>
         <div class="charts" style="justify-content:center;">
           <div class="cc" style="flex:none;width:100%;max-width:640px;border-right:none;">
             <div class="cc-t">身体機能チャート（5軸）</div>
@@ -3041,6 +3042,7 @@ function p3BuildReport() {
   }
 
   renderCharts();
+  buildCmpSummary();
   buildImprove();
   buildTable();
   buildMna();
@@ -3056,12 +3058,81 @@ function p3BuildReport() {
   frailRecordCurrent(); // v12: この受診者の1行を端末内に蓄積（同一ID・同日は上書き）
 }
 
+// v13: 前回からの変化サマリー（レポート2ページ目）
+function buildCmpSummary(){
+  const box=document.getElementById('cmp-summary');
+  if(!box) return;
+  if(!(cmpMode && PV)){ box.style.display='none'; box.innerHTML=''; return; }
+
+  const ps=calcPS(), psTotal=calcPSTotal(ps);
+  const j=calcJCHS(), clt=calcCLTotal(), sr=calcSarcReport();
+  const RANK={'健常':0,'プレフレイル':1,'フレイル':2};
+
+  const rows=[];
+  // 総合判定
+  if(PV.judge){
+    const pr=RANK[PV.judge], cr=RANK[j.vd];
+    let tag='維持', cls='bkp';
+    if(pr!=null && cr!=null){
+      if(cr<pr){ tag='改善'; cls='bok'; }
+      else if(cr>pr){ tag='注意'; cls='bng'; }
+    }
+    rows.push({name:'総合判定（フレイル）', prev:PV.judge, cur:j.vd, tag, cls});
+  }
+  const numRow=(name,prev,cur,upGood,unit,dec)=>{
+    if(prev==null||cur==null) return;
+    const d=cur-prev, eq=Math.abs(d)<(dec?0.05:0.5);
+    const imp=upGood?(d>0):(d<0);
+    rows.push({name,
+      prev:prev.toFixed(dec||0)+unit, cur:cur.toFixed(dec||0)+unit,
+      tag: eq?'維持':imp?'改善':'注意', cls: eq?'bkp':imp?'bok':'bng',
+      diff:(d>0?'▲':d<0?'▼':'→')+Math.abs(d).toFixed(dec||0)});
+  };
+  numRow('身体機能スコア', PV.psTotal, psTotal, true, '点', 0);
+  numRow('生活機能のリスク項目', PV.clRisk, clt.risk, false, '項目', 0);
+  numRow('SARC-F', PV.sarcF, sr.sarcF, false, '点', 0);
+  if(!sr.calfSkip) numRow('SARC-CalF', PV.sarcCalf, sr.total, false, '点', 0);
+  numRow('BMI', PV.bmi, S.bmi, null, '', 1);
+  numRow('体重', PV.wt, S.wt, null, 'kg', 1);
+  numRow('MNA-SF', PV.mna, S.mnaTotal, true, '点', 0);
+  if(PV.mmse!=null && S.mmse!=null) numRow('認知機能スコア', PV.mmse, S.mmse, true, '点', 0);
+
+  // BMI・体重は増減の善し悪しを一律に決められないので「参考」表示に
+  rows.forEach(r=>{ if(r.name==='BMI'||r.name==='体重'){ r.tag='参考'; r.cls='bkp'; } });
+
+  if(!rows.length){ box.style.display='none'; box.innerHTML=''; return; }
+
+  box.style.display='block';
+  box.innerHTML =
+    `<div style="background:#fff;border:1.5px solid #dbe6f0;border-radius:12px;padding:12px 14px;margin:0 12px 12px;">
+      <div style="font-size:15px;font-weight:800;color:#1a3a5c;margin-bottom:2px;">📅 前回からの変化</div>
+      <div style="font-size:12px;color:#8aaac0;margin-bottom:8px;">前回：${PV.date}${PV.partial?'（旧版の記録のため一部のみ）':''}</div>
+      <table style="width:100%;border-collapse:collapse;font-size:14.5px;">
+        <tr style="background:#eef4fa;color:#1a3a5c;font-size:12.5px;font-weight:700;">
+          <th style="text-align:left;padding:6px 8px;">項目</th>
+          <th style="text-align:center;padding:6px 4px;">前回</th>
+          <th style="text-align:center;padding:6px 4px;">今回</th>
+          <th style="text-align:center;padding:6px 4px;">変化</th>
+        </tr>
+        ${rows.map(r=>`<tr style="border-top:1px solid #eef2f7;">
+          <td style="padding:7px 8px;color:#2a3a4a;">${r.name}</td>
+          <td style="text-align:center;padding:7px 4px;color:#7a9ab8;">${r.prev}</td>
+          <td style="text-align:center;padding:7px 4px;font-weight:700;color:#1a3a5c;">${r.cur}</td>
+          <td style="text-align:center;padding:7px 4px;white-space:nowrap;">
+            ${r.diff?`<span style="font-size:13px;color:#5a7a9a;margin-right:4px;">${r.diff}</span>`:''}
+            <span class="bdg ${r.cls}">${r.tag}</span></td>
+        </tr>`).join('')}
+      </table>
+      <div style="font-size:11.5px;color:#9abacc;margin-top:6px;line-height:1.6;">「改善」「注意」は前回との比較です。BMI・体重は増減の意味が人によって異なるため「参考」と表示しています。</div>
+    </div>`;
+}
+
 function toggleCmp(){
   if(!PV)return;
   cmpMode=!cmpMode;
   document.getElementById('cbtn').textContent=cmpMode?'前回データと比較中':'比較OFF';
   document.getElementById('cbtn').className='tbtn'+(cmpMode?' on':'');
-  renderCharts(); buildImprove(); buildTable();
+  renderCharts(); buildCmpSummary(); buildImprove(); buildTable();
 }
 
 function exportCsv(type){
@@ -3163,7 +3234,10 @@ function frailBuildPrev(pid, curDate){
         psTotal:q.ps, clRisk:q.cls,
         gripMax:q.grip, calfMax:q.calf, walkSpeed:q.walk,
         standupSec:null, balScore:null,
-        sppbTotal:q.sppb, sppbMax:(q.sppb!=null?12:null), mwtDist:q.mwt };
+        sppbTotal:q.sppb, sppbMax:(q.sppb!=null?12:null), mwtDist:q.mwt,
+        judge:q.judge||null, jchsSc:q.jchs,
+        sarcF:q.sarcF, sarcCalf:q.sarcCalf, sarcSuspect:(q.sarcJudge==='疑い'),
+        wt:null, bmi:q.bmi, mna:q.mna, mmse:q.mmse };
     }
     const keep=S;
     let pv=null;
@@ -3182,7 +3256,16 @@ function frailBuildPrev(pid, curDate){
         balScore:sk.sppbbal?null:sp.balScore,
         sppbTotal:sp.measured>0?sp.total:null,
         sppbMax:sp.measured>0?sp.maxTotal:null,
-        mwtDist:mw.skip?null:mw.dist
+        mwtDist:mw.skip?null:mw.dist,
+        // v13: 比較サマリー用
+        judge:(calcJCHS()||{}).vd||null,
+        jchsSc:(calcJCHS()||{}).sc,
+        sarcF:(calcSarcReport()||{}).sarcF,
+        sarcCalf:(calcSarcReport()||{}).calfSkip?null:(calcSarcReport()||{}).total,
+        sarcSuspect:(calcSarcReport()||{}).suspect,
+        wt:(S.wt!=null?S.wt:null), bmi:(S.bmi!=null?S.bmi:null),
+        mna:(S.mnaTotal!=null?S.mnaTotal:null),
+        mmse:(S.mmse===null||S.mmse===undefined)?null:S.mmse
       };
     } finally { S=keep; }
     return pv;
